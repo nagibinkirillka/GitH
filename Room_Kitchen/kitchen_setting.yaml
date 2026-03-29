@@ -1,0 +1,206 @@
+kitchen_setting:
+  homeassistant:
+    customize:
+      binary_sensor.0x00158d0007059e6f_contact:
+        friendly_name: "Окно кухня"
+        device_class: window
+        icon: mdi:window-open-variant
+      binary_sensor.dced838ebf39_occupancy:
+        friendly_name: "Движения кухня - движение"
+        device_class: motion
+        icon: mdi:motion-sensor
+      switch.0x60a423fffee66abc:
+        friendly_name: "Выключатель кухня"
+        icon: mdi:lightbulb
+      binary_sensor.0x00158d0006fafd08_moisture:
+        device_class: moisture
+        friendly_name: Датчик протечки воды кухня - мойка
+      sensor.0x00158d0006fafd08_battery:
+        device_class: battery
+        friendly_name: Датчик протечки воды кухня - мойка
+      binary_sensor.0x00158d0008dfa549_moisture:
+        device_class: moisture
+        friendly_name: Датчик протечки воды кухня - стиралка
+      sensor.0x00158d0008dfa549_battery:
+        device_class: battery
+        friendly_name: Датчик протечки воды кухня - стиралка
+      binary_sensor.kuhnya_motion:
+        friendly_name: "Движение кухня"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.kuhnya_podsvetka:
+        friendly_name: "Кухня подсветка"
+        device_class: light
+        icon: mdi:lightbulb
+      binary_sensor.kuhnya_windows:
+        friendly_name: "Окно в кухне"
+        device_class: window
+        icon: mdi:window-open-variant
+      sensor.kuhnya_humidity_virt:
+        friendly_name: "Средняя влажность кухня"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.kuhnya_temperature_virt:
+        friendly_name: "Средняя температура кухня"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      sensor.0x00158d000ad988bf_battery:
+        friendly_name: "Датчик температуры в кухне"
+        device_class: battery
+      sensor.0x00158d000ad988bf_humidity:
+        friendly_name: "Средняя влажность кухня"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.0x00158d000ad988bf_temperature:
+        friendly_name: "Средняя температура кухня"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      light.ws2812_kyhnya:
+        friendly_name: "Светодиодная лента кухня"
+      light.led_kuhnja_ws2812_kyhnya:
+        friendly_name: "Светодиодная лента кухня"
+        supported_color_modes:
+          - rgb
+      binary_sensor.led_kuhnja_switch_ws2812b_button:
+        friendly_name: "Кнопка ленты кухня"
+        device_class: button
+      switch.kuhnya_switch:
+        friendly_name: "Выключатель кухня"
+        icon: mdi:lightbulb
+      switch.kuhnya_vitajka_kuhnya_vitajka_relay:
+        friendly_name: "Вытяжка кухня"
+        icon: mdi:fan
+      light.kitchen_led_yandex:
+        friendly_name: "Светодиодная лента кухня"
+        supported_features: 0
+
+  template:
+    - binary_sensor:
+        - name: kuhnya_podsvetka
+          state: >
+            {{ is_state('light.ws2812_kyhnya', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.kuhnya_podsvetka', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-off
+            {% endif %}
+
+        - name: kuhnya_windows
+          device_class: window
+          state: >
+            {{ is_state('binary_sensor.0x00158d0007059e6f_contact', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.kuhnya_windows', 'on') %}
+              mdi:window-open-variant
+            {% else %}
+              mdi:window-closed-variant
+            {% endif %}
+
+        - name: kuhnya_motion
+          device_class: motion
+          state: >
+            {{ is_state('binary_sensor.dced838ebf39_occupancy', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.kuhnya_motion', 'on') %}
+              mdi:motion-sensor
+            {% else %}
+              mdi:motion-sensor-off
+            {% endif %}
+
+    - sensor:
+        - name: kuhnya_temperature_virt
+          unit_of_measurement: "°C"
+          device_class: temperature
+          icon: mdi:temperature-celsius
+          state: >
+            {{
+              (states('sensor.0x00158d000ad988bf_temperature') | float(0))
+              }}
+
+        - name: kuhnya_humidity_virt
+          unit_of_measurement: "%"
+          device_class: humidity
+          icon: mdi:water-percent
+          state: >-
+            {{
+              (states('sensor.0x00158d000ad988bf_humidity') | float(0))
+              }}
+
+    - switch:
+        - turn_on:
+            - entity_id:
+                - switch.0x60a423fffee66abc
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0x60a423fffee66abc
+              action: switch.turn_off
+          default_entity_id: switch.kuhnya_switch
+          icon: >
+            {% if is_state('switch.kuhnya_switch', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-outline
+            {% endif %}
+          name: Выключатель кухня
+          state: "{{ is_state('switch.0x60a423fffee66abc', 'on')}}"
+
+  automation:
+    - alias: Kuhnya-Off_5min_no_motion
+      description: ""
+      mode: single
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.kuhnya_motion
+          to: "off"
+          for: 00:03:00
+      condition:
+        - condition: state
+          entity_id: switch.kuhnya_switch
+          state: "on"
+      action:
+        - service: switch.turn_off
+          entity_id: switch.kuhnya_switch
+
+    - alias: Kuhnya-on_click_Podsvetka
+      initial_state: true
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.led_kuhnja_switch_ws2812b_button
+          from: "on"
+          to: "off"
+      condition:
+        - condition: state
+          entity_id: binary_sensor.kuhnya_podsvetka
+          state: "off"
+        - condition: time
+          before: "15:00:00"
+          after: "08:00:00"
+      action:
+        - service: light.turn_on
+          entity_id:
+            - light.led_kuhnja_ws2812_kyhnya
+          data_template:
+            brightness_pct: 100
+            rgb_color: [159, 255, 255]
+
+    - alias: Kuhnya-off_click_Podsvetka
+      initial_state: true
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.led_kuhnja_switch_ws2812b_button
+          from: "on"
+          to: "off"
+      condition:
+        - condition: state
+          entity_id: binary_sensor.kuhnya_podsvetka
+          state: "on"
+      action:
+        - service: light.turn_off
+          entity_id:
+            - light.led_kuhnja_ws2812_kyhnya

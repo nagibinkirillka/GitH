@@ -1,0 +1,51 @@
+bathroom_ya_int:
+  yandex_station_intents:
+    intents:
+      Включи свет в ванной:
+        extra_phrases:
+          - Включи свет в ванне
+          - Свет в ванной
+          - Свет в ванне
+      Выключи свет в ванной:
+        extra_phrases:
+          - Ванная свет выключить
+          - Выключи свет в ванне
+
+  automation:
+    - alias: Ya_Int_bathroom_Light_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи свет в ванной
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.vannaya_switch
+
+    - alias: Ya_Int_bathroom_Light_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи свет в ванной
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.vannaya_switch
+
+    - alias: Ya_Int_bathroom_Dush_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Пошел мыться
+      action:
+        - service: automation.turn_off
+          data:
+            stop_actions: true
+          target:
+            entity_id:
+              - automation.vannaya_turn_off_light_after_3_min_when_switch_on
+              - automation.vannaya_turn_off_light_by_motion_sensor
+              - automation.vannaya_turn_on_light_by_motion_sensor

@@ -1,0 +1,85 @@
+children_ya_int:
+  yandex_station_intents:
+    intents:
+      Включи свет в детской:
+        extra_phrases:
+          - Детская свет
+          - Свет в детской
+      Выключи свет в детской:
+        extra_phrases:
+          - Детская свет выключить
+      Включи ночник:
+        extra_phrases:
+          - Включи малый свет
+        say_phrase: Темнота друг молодежи
+      Отправь туда:
+        say_phrase: Давайте танцевать!
+      Отправь сюда:
+      Включи елочку:
+        extra_phrases:
+          - Зажги елочку
+          - Елочка гори
+        say_phrase: Ура!! Новогоднее настроение
+      Выключи елочку:
+        extra_phrases:
+          - Елочка стоп
+        say_phrase: Как то стало грустно!
+
+  automation:
+    - alias: Ya_Int_children_Light_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи свет в детской
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.detskaya_switch
+
+    - alias: Ya_Int_children_Elochka
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи елочку
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.0xa4c1380b215141b6
+
+    - alias: Ya_Int_children_Elochka_off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи елочку
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.0xa4c1380b215141b6
+
+    - alias: Ya_Int_children_Light_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи свет в детской
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.detskaya_switch
+
+    - alias: Yandex_Int_Nochnik
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи ночник
+      action:
+        - service: switch.turn_off
+          data:
+            entity_id: switch.detskaya_l_switch
+        - service: switch.turn_on
+          data:
+            entity_id: switch.detskaya_r_switch

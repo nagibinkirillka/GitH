@@ -1,0 +1,207 @@
+children_setting:
+  homeassistant:
+    customize:
+      switch.0x60a423fffeb046fa_left:
+        friendly_name: "Выключатель детская - большой свет"
+        icon: mdi:lightbulb
+      switch.0x60a423fffeb046fa_right:
+        friendly_name: "Выключатель детская - малый свет"
+        icon: mdi:lightbulb
+      binary_sensor.0x00158d00068a0604_contact:
+        friendly_name: "Кондиционер детская"
+        icon: mdi:air-conditioner
+      sensor.0x00158d00068a0604_battery:
+        friendly_name: "Кондиционер детская"
+        device_class: battery
+      binary_sensor.0x00158d00067f0d82_contact:
+        friendly_name: "Окно детская"
+        device_class: window
+        icon: mdi:window-open-variant
+      sensor.0x00158d00067f0d82_battery:
+        friendly_name: "Окно детская"
+        device_class: battery
+      binary_sensor.sensor_motion_detskaya:
+        friendly_name: "Движение детская"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.detskaya_motion:
+        friendly_name: "Движение детская"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.detskaya_condition:
+        friendly_name: "Кондиционер в детской"
+        icon: mdi:air-conditioner
+      binary_sensor.detskaya_windows:
+        friendly_name: "Окно в детской"
+        device_class: window
+        icon: mdi:window-open-variant
+      sensor.detskaya_temperature_virt:
+        friendly_name: "Средняя температура детская"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      sensor.detskaya_humidity_virt:
+        friendly_name: "Средняя влажность детская"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      humidifier.uvlazhnitel:
+        friendly_name: "Кузя"
+        device_class: humidifier
+        icon: mdi:air-humidifier
+      sensor.0xa4c138c42156a83b_temperature:
+        friendly_name: "Датчик температуры детская"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      sensor.0xa4c138c42156a83b_humidity:
+        friendly_name: "Датчик влажности детская"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.detskaya_temperature:
+        friendly_name: "Температура детская"
+        unit_of_measurement: "°C"
+        device_class: temperature
+      sensor.detskaya_humidity:
+        friendly_name: "Влажность детская"
+        unit_of_measurement: "%"
+        device_class: humidity
+      switch.detskaya_switch:
+        friendly_name: "Выключатель детская"
+        icon: mdi:lightbulb
+      switch.detskaya_r_switch:
+        friendly_name: "Выключатель детская - малый свет"
+        icon: mdi:lightbulb
+      switch.detskaya_l_switch:
+        friendly_name: "Выключатель детская - большой свет"
+        icon: mdi:lightbulb
+      binary_sensor.spalnya_kuzya:
+        friendly_name: "Кузя статус"
+        icon: mdi:air-humidifier
+
+  template:
+    - binary_sensor:
+        - name: detskaya_kuzya
+          state: >
+            {{ is_state('humidifier.uvlazhnitel', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.spalnya_kuzya', 'on') %}
+              mdi:air-humidifier
+            {% else %}
+              mdi:air-humidifier
+            {% endif %}
+
+        - name: detskaya_condition
+          device_class: window
+          state: >
+            {{ is_state('binary_sensor.0x00158d00068a0604_contact', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.detskaya_condition', 'on') %}
+              mdi:air-conditioner
+            {% else %}
+              mdi:air-conditioner
+            {% endif %}
+
+        - name: detskaya_windows
+          device_class: window
+          state: >
+            {{ is_state('binary_sensor.0x00158d00067f0d82_contact', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.detskaya_windows', 'on') %}
+              mdi:window-open-variant
+            {% else %}
+              mdi:window-closed-variant
+            {% endif %}
+
+        - name: detskaya_motion
+          device_class: motion
+          state: >
+            {{ is_state('binary_sensor.sensor_motion_detskaya', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.detskaya_motion', 'on') %}
+              mdi:motion-sensor
+            {% else %}
+              mdi:motion-sensor-off
+            {% endif %}
+
+    - sensor:
+        - name: detskaya_temperature_virt
+          unit_of_measurement: "°C"
+          device_class: temperature
+          icon: mdi:temperature-celsius
+          state: >
+            {{ ((
+                (states('sensor.0xa4c138c42156a83b_temperature') | float(0)) +
+                (states('sensor.detskaya_temperature') | float(0))
+                ) / 2) | round(2)
+              }}
+
+        - name: detskaya_humidity_virt
+          unit_of_measurement: "%"
+          device_class: humidity
+          icon: mdi:water-percent
+          state: >
+            {{ ((
+                (states('sensor.0xa4c138c42156a83b_humidity') | float(0)) +
+                (states('sensor.detskaya_humidity') | float(0))
+                ) / 2) | round(2)
+              }}
+
+    - switch:
+        - turn_on:
+            - entity_id:
+                - switch.0x60a423fffeb046fa_right
+                - switch.0x60a423fffeb046fa_left
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0x60a423fffeb046fa_right
+                - switch.0x60a423fffeb046fa_left
+              action: switch.turn_off
+          default_entity_id: switch.detskaya_switch
+          icon: >
+            {% if is_state('detskaya_switch', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-outline
+            {% endif %}
+          name: Выключатель детская
+          state: >
+            {{ is_state('switch.0x60a423fffeb046fa_right', 'on') and is_state('switch.0x60a423fffeb046fa_left', 'on')}}
+
+        - turn_on:
+            - entity_id:
+                - switch.0x60a423fffeb046fa_right
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0x60a423fffeb046fa_right
+              action: switch.turn_off
+          default_entity_id: switch.detskaya_r_switch
+          icon: >
+            {% if is_state('switch.detskaya_r_switch', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-outline
+            {% endif %}
+          name: Выключатель детская - малый свет
+          state: "{{ is_state('switch.0x60a423fffeb046fa_right', 'on')}}"
+
+        - turn_on:
+            - entity_id:
+                - switch.0x60a423fffeb046fa_left
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0x60a423fffeb046fa_left
+              action: switch.turn_off
+          default_entity_id: switch.detskaya_l_switch
+          icon: >
+            {% if is_state('switch.detskaya_l_switch', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-outline
+            {% endif %}
+          name: Выключатель детская - большой свет
+          state: "{{ is_state('switch.0x60a423fffeb046fa_left', 'on')}}"

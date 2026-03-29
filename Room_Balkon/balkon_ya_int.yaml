@@ -1,0 +1,32 @@
+balkon_ya_int:
+  yandex_station_intents:
+    intents:
+      Включи свет на балконе:
+        extra_phrases:
+          - Свет на балконе
+      Выключи свет на балконе:
+        extra_phrases:
+          - Балкон свет выключить
+
+  automation:
+    - alias: Ya_Int_balkon_Light_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи свет на балконе
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.lodjiya_sw_lodjiya_sw_relay
+
+    - alias: Ya_Int_balkon_Light_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи свет на балконе
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.lodjiya_sw_lodjiya_sw_relay

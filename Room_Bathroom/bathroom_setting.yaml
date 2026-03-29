@@ -1,0 +1,189 @@
+bathroom_setting:
+  homeassistant:
+    customize:
+      sensor.0x60a423fffee6ab1e_linkquality:
+        friendly_name: "Выключатель уборная - связь до ZigBee"
+        icon: mdi:signal
+      binary_sensor.vannaya_motion:
+        friendly_name: "Движение ванная"
+        device_class: motion
+        icon: mdi:motion-sensor
+      switch.0x60a423fffee6ab1e_left:
+        friendly_name: "Выключатель ванная"
+        icon: mdi:lightbulb
+      binary_sensor.vannaya_door:
+        friendly_name: "Ванная дверь"
+        icon: mdi:door-open
+        device_class: door
+      binary_sensor.0x00158d00067f1f5d_contact:
+        friendly_name: "Ванная дверь"
+        icon: mdi:door-open
+        device_class: door
+      sensor.0x00158d00067f1f5d_battery:
+        friendly_name: "Ванная дверь"
+        device_class: battery
+      binary_sensor.0x00158d0007f289ef_moisture:
+        device_class: moisture
+        friendly_name: "Датчик протечки воды ванная - Стиральная машинка"
+      sensor.0x00158d0007f289ef_battery:
+        device_class: battery
+        friendly_name: "Датчик протечки воды ванная - Стиральная машинка"
+      binary_sensor.0x00158d0008e0abbc_moisture:
+        device_class: moisture
+        friendly_name: "Датчик протечки воды ванная - Ванная"
+      sensor.0x00158d0008e0abbc_battery:
+        device_class: battery
+        friendly_name: "Датчик протечки воды ванная - Ванная"
+      binary_sensor.0x00158d0008dfa549_moisture:
+        device_class: moisture
+        friendly_name: "Датчик протечки в кухне - Моечная машина"
+      binary_sensor.0x00158d0008dfef37_moisture:
+        device_class: moisture
+        friendly_name: "Датчик протечки в туалете - Унитаз"
+      binary_sensor.0x00158d0006fafd08_moisture:
+        device_class: moisture
+        friendly_name: "Датчик протечки в кухне - Мойка"
+      binary_sensor.0x00158d0008e0d500_moisture:
+        device_class: moisture
+        friendly_name: "Датчик протечки воды ванная - шкаф"
+      sensor.0x00158d0008e0d500_battery:
+        device_class: battery
+        friendly_name: "Датчик протечки воды ванная - шкаф"
+      sensor.vannaya_temperature_virt:
+        friendly_name: "Средняя температура в ванной"
+        unit_of_measurement: "°C"
+        device_class: temperature
+      sensor.vannaya_humidity_virt:
+        friendly_name: "Средняя влажность ванной"
+        unit_of_measurement: "%"
+        device_class: humidity
+      sensor.0x00158d000ad98b32_battery:
+        device_class: battery
+        friendly_name: "Датчик температуры ванная"
+      sensor.0x00158d000ad98b32_humidity:
+        friendly_name: "Средняя влажность ванной"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.0x00158d000ad98b32_temperature:
+        friendly_name: "Средняя температура ванной"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      binary_sensor.0x00158d000854a6d5_occupancy:
+        friendly_name: "Движение ванная - датчик"
+        device_class: motion
+        icon: mdi:motion-sensor
+      switch.vannaya_switch:
+        friendly_name: "Выключатель ванная"
+        icon: mdi:lightbulb
+
+  template:
+    - binary_sensor:
+        - name: vannaya_door
+          device_class: door
+          state: >
+            {{ is_state('binary_sensor.0x00158d00067f1f5d_contact', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.vannaya_door', 'on') %}
+              mdi:door-open
+            {% else %}
+              mdi:door-closed
+            {% endif %}
+
+        - name: vannaya_motion
+          device_class: motion
+          state: >
+            {{ is_state('binary_sensor.0x00158d000854a6d5_occupancy', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.vannaya_motion', 'on') %}
+              mdi:motion-sensor
+            {% else %}
+              mdi:motion-sensor-off
+            {% endif %}
+
+    - sensor:
+        - name: vannaya_temperature_virt
+          unit_of_measurement: "°C"
+          device_class: temperature
+          icon: mdi:temperature-celsius
+          state: >
+            {{
+                (states('sensor.0x00158d000ad98b32_temperature') | float(0))
+            }}
+
+        - name: vannaya_humidity_virt
+          unit_of_measurement: "%"
+          device_class: humidity
+          icon: mdi:water-percent
+          state: >
+            {{
+              (states('sensor.0x00158d000ad98b32_humidity') | float(0))
+            }}
+
+    - switch:
+        - turn_on:
+            - entity_id:
+                - switch.0x60a423fffee6ab1e_left
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0x60a423fffee6ab1e_left
+              action: switch.turn_off
+          default_entity_id: switch.vannaya_switch
+          icon: >
+            {% if is_state('switch.vannaya_switch', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-outline
+            {% endif %}
+          name: Выключатель ванная
+          state: "{{ is_state('switch.0x60a423fffee6ab1e_left', 'on')}}"
+
+  automation:
+    - alias: Vannaya-Turn_on_light_by_motion_sensor
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.vannaya_motion
+          to: "on"
+      condition:
+        - condition: state
+          entity_id: switch.vannaya_switch
+          state: "off"
+      action:
+        - service: switch.turn_on
+          entity_id: switch.vannaya_switch
+
+    - alias: Vannaya-Turn_off_light_by_motion_sensor
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.vannaya_motion
+          to: "off"
+          for: 00:03:00
+      condition:
+        - condition: state
+          entity_id: switch.vannaya_switch
+          state: "on"
+        - condition: state
+          entity_id: binary_sensor.vannaya_door
+          state: "on"
+      action:
+        - service: switch.turn_off
+          entity_id: switch.vannaya_switch
+
+    - alias: Vannaya-Turn_off_light_after_3_min_when_switch_on
+      trigger:
+        - platform: state
+          entity_id: switch.vannaya_switch
+          to: "on"
+          for: 00:03:00
+      condition:
+        - condition: state
+          entity_id: binary_sensor.vannaya_motion
+          state: "off"
+        - condition: state
+          entity_id: binary_sensor.vannaya_door
+          state: "on"
+      action:
+        - service: switch.turn_off
+          entity_id: switch.vannaya_switch

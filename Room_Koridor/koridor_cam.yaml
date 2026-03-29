@@ -1,0 +1,57 @@
+koridor_cam:
+  homeassistant:
+    customize:
+
+  automation:
+    # - alias: cam_tapo_kordor_photo
+    #   initial_state: true
+    #   trigger:
+    #     ## Виртуальная кнопка
+    #     - platform: state
+    #       entity_id: input_button.tplink_tc60_photo
+    #   condition:
+    #   action:
+    #     action: telegram_bot.send_photo
+    #     data:
+    #       entity_id:
+    #         - notify.maylie_opoveshchenie_ot_um_doma_1001785858034
+    #       caption: >-
+    #         {{"\U0001F3B6"}} Приперлись
+    #         states.sensor.time_date.state }}
+    #       parse_mode: markdownv2
+    #       url: http://192.168.10.150:1984/api/frame.jpeg?src=tapo_kor
+
+    - alias: cam_en_open_door_photo
+      description: Открытие двери - фото и отправка в телеграмм
+      initial_state: true
+      mode: restart
+      trigger:
+        ## Открытие двери
+        - platform: state
+          entity_id: binary_sensor.koridor_door
+          to: "on"
+      condition:
+        - condition: state
+          entity_id: binary_sensor.koridor_motion
+          state: "off"
+      action:
+        - delay: "00:00:06"
+        - action: telegram_bot.send_photo
+          data:
+            entity_id:
+              - notify.maylie_opoveshchenie_ot_um_doma_1001785858034
+            caption: >-
+              {{"\U0001F3B6"}} Приперлись {{states.sensor.time_date.state }}
+            parse_mode: markdownv2
+            url: http://192.168.10.150:1984/api/frame.jpeg?src=tapo_kor
+
+  # - delay: 00:00:07
+  # - service: input_button.press
+  #   target:
+  #     entity_id:
+  #       - input_button.tplink_tc60_photo
+
+  # input_button:
+  #   tplink_tc60_photo:
+  #     name: Фото tapo_tc_60
+  #     icon: mdi:camera

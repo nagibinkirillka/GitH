@@ -1,0 +1,465 @@
+toilet_setting:
+  homeassistant:
+    customize:
+      binary_sensor.0x00158d00070846e8_contact:
+        friendly_name: "Дверь в туалет"
+        icon: mdi:door-open
+        device_class: door
+      sensor.0x00158d00070846e8_battery:
+        friendly_name: "Дверь в туалет"
+        device_class: battery
+      sensor.0x00158d00070846e8_zigbee:
+        friendly_name: "Дверь в туалет - связь ZigBee"
+        icon: mdi:zigbee
+      switch.tualet_vit:
+        friendly_name: "Вытяжка туалет"
+        icon: mdi:fan
+      switch.0x60a423fffee6ab1e_right:
+        friendly_name: "Выключатель туалет"
+        icon: mdi:lightbulb
+      binary_sensor.toilet_door:
+        friendly_name: "Дверь в туалет"
+        icon: mdi:door-open
+        device_class: door
+      binary_sensor.toilet_motion:
+        friendly_name: "Движение в туалете"
+        device_class: motion
+        icon: mdi:motion-sensor
+      sensor.toilet_temperature_virt:
+        friendly_name: "Средняя температура в ванной"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      sensor.toilet_humidity_virt:
+        friendly_name: "Средняя влажность ванной"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      binary_sensor.0x00158d0008dfef37_moisture:
+        device_class: moisture
+        friendly_name: "Датчик протечки воды туалет - унитаз"
+      sensor.0x00158d0008dfef37_battery:
+        device_class: battery
+        friendly_name: "Датчик протечки воды туалет - унитаз"
+      switch.tualet_vit_water_cold:
+        friendly_name: "Холодная вода"
+        icon: mdi:water
+      switch.tualet_vit_water_hot:
+        friendly_name: "Горячая вода"
+        icon: mdi:water
+      binary_sensor.582d3460db86_motion:
+        friendly_name: "Движение туалет - датчик"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.649e314c5742_occupancy:
+        friendly_name: "Движение туалет - датчик 2"
+        device_class: motion
+        icon: mdi:motion-sensor
+      sensor.0x00158d000ad604da_temperature:
+        friendly_name: "Температура туалет"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      sensor.0x00158d000ad604da_humidity:
+        friendly_name: "Влажность туалет"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      switch.sonoff_basic_tualet:
+        friendly_name: "Вытяжка туалет - Sonoff"
+        icon: mdi:fan
+      switch.tualet_vitajka_sonoff_basic_tualet:
+        friendly_name: "Вытяжка туалет - Sonoff"
+        icon: mdi:fan
+      switch.tualet_switch:
+        friendly_name: "Выключатель туалет"
+        icon: mdi:lightbulb
+      sensor.tualet_aktuator_water_cold:
+        friendly_name: "Положение холодной воды"
+        icon: mdi:valve
+      sensor.tualet_aktuator_water_hot:
+        friendly_name: "Положение горячей воды"
+        icon: mdi:valve
+
+  template:
+    - binary_sensor:
+        - name: toilet_door
+          device_class: door
+          state: >
+            {{ is_state('binary_sensor.0x00158d00070846e8_contact', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.0x00158d00070846e8_contact', 'on') %}
+              mdi:door-open
+            {% else %}
+              mdi:door-closed
+            {% endif %}
+
+        - name: toilet_motion
+          device_class: motion
+          state: >
+            {{ is_state('binary_sensor.582d3460db86_motion', 'on') or
+               is_state('binary_sensor.649e314c5742_occupancy', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.toilet_motion', 'on') %}
+              mdi:motion-sensor
+            {% else %}
+              mdi:motion-sensor-off
+            {% endif %}
+
+    - sensor:
+        - name: toilet_temperature_virt
+          unit_of_measurement: "°C"
+          device_class: temperature
+          icon: mdi:temperature-celsius
+          state: >
+            {{
+              (states('sensor.0x00158d000ad604da_temperature') | float(0))
+            }}
+
+        - name: toilet_humidity_virt
+          unit_of_measurement: "%"
+          device_class: humidity
+          icon: mdi:water-percent
+          state: >
+            {{
+              (states('sensor.0x00158d000ad604da_humidity') | float(0))
+            }}
+
+        - name: tualet_aktuator_water_cold
+          state: >
+            {% if states('switch.tualet_vit_water_cold') == 'on' %}
+            Положение актуатора - Холодная вода включена
+            {% else %}
+            Положение актуатора - Холодная вода выключена
+            {% endif %}
+
+        - name: tualet_aktuator_water_hot
+          state: >
+            {% if states('switch.tualet_vit_water_hot') == 'on' %}
+            Положение актуатора - Горячая вода включена
+            {% else %}
+            Положение актуатора - Горячая вода выключена
+            {% endif %}
+
+    - switch:
+        - turn_on:
+            - entity_id:
+                - switch.0x60a423fffee6ab1e_right
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0x60a423fffee6ab1e_right
+              action: switch.turn_off
+          default_entity_id: switch.tualet_switch
+          icon: >
+            {% if is_state('switch.tualet_switch', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-outline
+            {% endif %}
+          name: Выключатель туалет
+          state: "{{ is_state('switch.0x60a423fffee6ab1e_right', 'on')}}"
+
+        - turn_on:
+            - entity_id:
+                - switch.0xa4c13831e8c737c0
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0xa4c13831e8c737c0
+              action: switch.turn_off
+          default_entity_id: switch.tualet_vit_water_cold
+          icon: >
+            {% if is_state('switch.tualet_vit_water_cold', 'on') %}
+              mdi:water
+            {% else %}
+              mdi:water-off
+            {% endif %}
+          name: Холодная вода
+          state: "{{ is_state('switch.0xa4c13831e8c737c0', 'on')}}"
+
+        - turn_on:
+            - entity_id:
+                - switch.0xa4c138382fb44ae0
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0xa4c138382fb44ae0
+              action: switch.turn_off
+          default_entity_id: switch.tualet_vit_water_hot
+          icon: >
+            {% if is_state('switch.tualet_vit_water_hot', 'on') %}
+              mdi:water
+            {% else %}
+              mdi:water-off
+            {% endif %}
+          name: Горячая вода
+          state: "{{ is_state('switch.0xa4c138382fb44ae0', 'on')}}"
+
+        - turn_on:
+            - entity_id:
+                - switch.tualet_vitajka_sonoff_basic_tualet
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.tualet_vitajka_sonoff_basic_tualet
+              action: switch.turn_off
+          default_entity_id: switch.tualet_vit
+          icon: >
+            {% if is_state('switch.tualet_vit', 'on') %}
+              mdi:fan
+            {% else %}
+              mdi:fan-off
+            {% endif %}
+          name: Вытяжка туалет
+          state: "{{ is_state('switch.tualet_vitajka_sonoff_basic_tualet', 'on')}}"
+
+  automation:
+    - alias: toilet-Turn_on_light_by_motion_sensor
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.toilet_motion
+          to: "on"
+      condition:
+        - condition: state
+          entity_id: switch.tualet_switch
+          state: "off"
+      action:
+        - service: switch.turn_on
+          entity_id: switch.tualet_switch
+
+    - alias: toilet-Turn_off_light_by_motion_sensor
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.toilet_motion
+          to: "off"
+          for: 00:00:30
+      condition:
+        - condition: state
+          entity_id: switch.tualet_switch
+          state: "on"
+      # - condition: state
+      #   entity_id: binary_sensor.vannaya_door
+      #   state: 'on'
+      action:
+        - service: switch.turn_off
+          entity_id: switch.tualet_switch
+
+    - alias: toilet-Turn_off_light_after_3_min_when_switch_on
+      trigger:
+        - platform: state
+          entity_id: switch.tualet_switch
+          to: "on"
+          for: 00:00:30
+      condition:
+        - condition: state
+          entity_id: binary_sensor.toilet_motion
+          state: "off"
+      action:
+        - service: switch.turn_off
+          entity_id: switch.tualet_switch
+
+      #   Включение вытяжки
+
+    - alias: Toilet-on_off_tualet_fan
+      trigger:
+        - platform: state
+          entity_id: switch.tualet_switch
+          from: "on"
+          to: "off"
+          for: "00:00:30"
+        # - platform: state
+        #   entity_id: sensor.0x00158d0006444f09_action
+        #   to: 'single'
+        #   for: '00:00:30'
+      condition:
+        - condition: state
+          entity_id: switch.tualet_switch
+          state: "off"
+        - condition: state
+          entity_id: switch.tualet_vitajka_sonoff_basic_tualet
+          state: "off"
+      action:
+        - service: timer.start
+          target:
+            entity_id: timer.vityajka_30
+        - service: switch.turn_on
+          entity_id: switch.tualet_vitajka_sonoff_basic_tualet
+        - delay: 00:05:00
+        - service: switch.turn_off
+          entity_id: switch.tualet_vitajka_sonoff_basic_tualet
+
+    - alias: Toilet-Vityajka_On_humidity_vannaya_55
+      id: Vityajka_On_humidity_vannaya_55
+      initial_state: true
+      trigger:
+        platform: numeric_state
+        entity_id: sensor.vannaya_humidity_virt
+        above: 60
+      condition:
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.tualet_vitajka_sonoff_basic_tualet
+
+    - alias: Toilet-Vityajka_Off_humidity_vannaya_45
+      id: Vityajka_Off_humidity_vannaya_45
+      initial_state: true
+      trigger:
+        platform: numeric_state
+        entity_id: sensor.vannaya_humidity_virt
+        below: 50
+      condition:
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.tualet_vitajka_sonoff_basic_tualet
+
+    - alias: Toilet-Vityajka_Off_HA_restart
+      id: Vityajka_Off_HA_restart
+      initial_state: true
+      trigger:
+        - platform: homeassistant
+          event: start
+      condition:
+        - condition: numeric_state
+          entity_id: sensor.vannaya_humidity_virt
+          below: 50
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.tualet_vitajka_sonoff_basic_tualet
+
+    # - alias: Toilet-Knopka_triple_Light_ON
+    #   id: Toilet-Knopka_triple_Light_ON
+    #   initial_state: true
+    #   trigger:
+    #     - domain: mqtt
+    #       device_id: 66e404aa46d7d0196a4bf0f13225427f
+    #       type: action
+    #       subtype: triple
+    #       trigger: device
+    #   condition:
+    #     - condition: state
+    #       entity_id: switch.tualet_switch
+    #       state: "on"
+    #   action:
+    #     - service: light.turn_on
+    #       entity_id:
+    #         - light.tualet_iandeks_lampochki
+    #       data:
+    #         brightness_pct: 10
+    #         rgb_color: [115, 255, 155]
+    #         effect: "Зеленый"
+
+    # - alias: Toilet-Knopka_hold_Light_ON
+    #   id: Toilet-Knopka_hold_Light_ON
+    #   initial_state: true
+    #   trigger:
+    #     - domain: mqtt
+    #       device_id: 66e404aa46d7d0196a4bf0f13225427f
+    #       type: action
+    #       subtype: hold
+    #       trigger: device
+    #   condition:
+    #     - condition: state
+    #       entity_id: switch.tualet_switch
+    #       state: "on"
+    #   action:
+    #     - service: light.turn_on
+    #       entity_id:
+    #         - light.tualet_iandeks_lampochki
+    #       data:
+    #         brightness_pct: 40
+    #         rgb_color: [255, 253, 184]
+    #         effect: "Белый"
+
+    - alias: Toilet-Knopka_Click_One_Light_ON
+      id: Toilet-Knopka_Click_One_Light_ON
+      initial_state: true
+      trigger:
+        - platform: mqtt
+          topic: zigbee2mqtt/0x00158d0006444f09/action
+          payload: single
+      condition:
+        - condition: state
+          entity_id: switch.tualet_switch
+          state: "off"
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.tualet_switch
+
+    - alias: Toilet-Knopka_Click_double_Vityajka_Off
+      id: Toilet-Knopka_Click_double_Vityajka_Off
+      initial_state: true
+      trigger:
+        - platform: mqtt
+          topic: zigbee2mqtt/0x00158d0006444f09/action
+          payload: double
+      condition:
+        - condition: state
+          entity_id: switch.tualet_vitajka_sonoff_basic_tualet
+          state: "on"
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.tualet_vitajka_sonoff_basic_tualet
+
+    - alias: Toilet-Knopka_Click_double_Vityajka_On
+      id: Toilet-Knopka_Click_double_Vityajka_On
+      initial_state: true
+      trigger:
+        - platform: mqtt
+          topic: zigbee2mqtt/0x00158d0006444f09/action
+          payload: double
+      condition:
+        - condition: state
+          entity_id: switch.tualet_vitajka_sonoff_basic_tualet
+          state: "off"
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.tualet_vitajka_sonoff_basic_tualet
+
+    - alias: Toilet-Vityajka_Off_below_2clock
+      id: Toilet-Vityajka_Off_below_2clock
+      initial_state: true
+      trigger:
+        - platform: state
+          entity_id: automation.toilet_knopka_click_double_vityajka_on
+          to: "on"
+          for: 02:00:00
+        - platform: state
+          entity_id: switch.tualet_vitajka_sonoff_basic_tualet
+          to: "on"
+          for: 02:00:00
+      condition:
+        - condition: numeric_state
+          entity_id: sensor.vannaya_humidity_virt
+          below: 50
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.tualet_vitajka_sonoff_basic_tualet
+
+    # - alias: Toilet-Send_Telegramm
+    #   id: Toilet-Send_Telegramm
+    #   initial_state: true
+    #   mode: single
+    #   triggers:
+    #     - trigger: calendar
+    #       entity_id: calendar.system_date
+    #       event: start
+    #       offset: "0:0:0"
+    #   conditions: []
+    #   actions:
+    #     - service: telegram_bot.send_message
+    #       data_template:
+    #         target: !secret chat_id_group
+    #         title: "{{ '\U00002705' }} *Показания счетчиков*"
+    #         message: >
+    #           🌴 Горячая вода   - {{(states('sensor.waterius_8931698_ch0')|round(2))}}
+    #           ❄️ Холодная вода  - {{(states('sensor.waterius_8931698_ch1')|round(2))}}
+    #         disable_web_page_preview: true
+    #         disable_notification: true

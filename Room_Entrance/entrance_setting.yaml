@@ -1,0 +1,47 @@
+entrance_setting:
+  homeassistant:
+    customize:
+      sensor.0x00158d0006e3d63e_action:
+        friendly_name: "Звонок в коридоре"
+      sensor.0x00158d0006e3d63e_battery:
+        friendly_name: "Звонок в коридоре"
+        device_class: battery
+      sensor.0x00158d0006e3d63e_zigbee:
+        friendly_name: "Звонок в коридоре"
+        icon: mdi:zigbee
+      binary_sensor.0x00158d0006e3d63e_vibration:
+        friendly_name: "Звонок в коридоре - вибрация"
+        device_class: vibration
+        icon: mdi:vibrate
+      binary_sensor.cam510_motion:
+        friendly_name: "Камера подъезд"
+        device_class: motion
+      binary_sensor.cam_on:
+        friendly_name: "Камера подъезд статус"
+        device_class: motion
+
+  template:
+    - binary_sensor:
+        - name: cam_on
+          state: >
+            {{ is_state('binary_sensor.cam510_motion', 'on') }}
+
+  automation:
+    - alias: cam_510_entrance_photo
+      initial_state: true
+      mode: restart
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.0x00158d0006e3d63e_vibration
+          from: "off"
+          to: "on"
+      action:
+        - action: telegram_bot.send_photo
+          data:
+            entity_id:
+              - notify.maylie_opoveshchenie_ot_um_doma_1001785858034
+            caption: >-
+              {{"\U0001F3B6"}} Звонок в дверь
+              {{"\U0001F3B6"}} Кто то нас хочет побеспокоить {{ states.sensor.time_date.state }}
+            parse_mode: markdownv2
+            url: http://192.168.10.150:1984/api/frame.jpeg?src=510_on

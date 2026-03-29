@@ -1,0 +1,131 @@
+toilet_ya_int:
+  yandex_station_intents:
+    intents:
+      Включи свет в туалете:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Туалет свет
+          - Свет в туалете
+      Выключи свет в туалете:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Туалет свет выключить
+      Туалет: # (3)
+        extra_phrases: # альтернативные фразы, максимум три
+          - Хочу в туалет
+      Выключи воду:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Перекрой воду
+      Включи воду:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Открой воду
+      Туалет вытяжка:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Вятяжка туалет
+      Пшик:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Сделай пшик
+          - Освежи туалет
+
+  automation:
+    - alias: Ya_Int_toilet_Light_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи свет в туалете # пример (2)
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.tualet_switch
+
+    - alias: Ya_Int_toilet_Light_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи свет в туалете # пример (2)
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.tualet_switch
+
+    - alias: Ya_Int_Tyalet
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Туалет
+      condition:
+      #   - condition: state
+      #     entity_id: binary_sensor.toilet_motion
+      #     state: 'off'
+      #   - condition: state
+      #     entity_id: switch.tualet_switch
+      #     state: 'off'
+      action:
+        - service: media_player.play_media
+          target:
+            entity_id: "{{ trigger.event.data.entity_id }}" # ответит колонка, которая услышала "Алиса, кто нибудь дома"
+          data:
+            media_content_type: text
+            media_content_id: |-
+              {%if is_state('binary_sensor.toilet_motion', 'off') and is_state('switch.tualet_switch', 'off') %} Как сказал классик: «Вам свободно»!{% endif %} 
+              {%if is_state('binary_sensor.toilet_motion', 'on') or is_state('switch.tualet_switch', 'on') %} Нашёл своё место в жизни, а оно занято…{% endif %}
+            extra:
+              volume_level: 0.4
+
+    - alias: Ya_Int_toilet_PhikDiffuzor
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Пшик
+      action:
+        - service: button.press
+          entity_id:
+            - button.2c195c9ba56f_fragrance_delivery
+
+    - alias: Ya_Int_toilet_Water_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи воду
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.tualet_vit_water_cold
+            - switch.tualet_vit_water_hot
+
+    - alias: Ya_Int_toilet_Water_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи воду
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.tualet_vit_water_cold
+            - switch.tualet_vit_water_hot
+
+    - alias: Ya_Int_toilet_vitajka_on
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Туалет вытяжка
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.tualet_vit
+
+    - alias: Ya_Int_toilet_vitajka_off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Туалет вытяжка
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.tualet_vit

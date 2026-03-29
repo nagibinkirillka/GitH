@@ -1,0 +1,69 @@
+system_yandex_smart_home:
+  yandex_smart_home:
+    filter:
+      include_entities:
+        - switch.detskaya_l_switch
+        - switch.detskaya_r_switch
+        - switch.koridor_switch
+        - switch.kuhnya_switch
+        - switch.spalnya_switch
+        - switch.vannaya_switch
+        - switch.tualet_switch
+        - switch.tualet_vit_water_cold
+        - switch.tualet_vit_water_hot
+        - switch.tualet_vit
+        - switch.kuhnya_vitajka_kuhnya_vitajka_relay
+        - sensor.waterius_8931698_ch1
+        - sensor.waterius_8931698_ch0
+        # - cover.0xa4c138130a392f5a
+    entity_config:
+      switch.detskaya_r_switch:
+        name: "Свет детская малый"
+        room: Детская
+        type: devices.types.light
+      switch.detskaya_l_switch:
+        name: "Свет детская больш"
+        room: Детская
+        type: devices.types.light
+      switch.koridor_switch:
+        name: "Свет коридор"
+        room: Коридор
+        type: devices.types.light
+      switch.kuhnya_switch:
+        name: "кухня"
+        room: Кухня
+        type: devices.types.light
+      switch.spalnya_switch:
+        name: "Свет спальня"
+        room: Спальня
+        type: devices.types.light
+      switch.vannaya_switch:
+        name: "Свет ванная"
+        room: Ванная
+        type: devices.types.light
+      switch.tualet_switch:
+        name: "Свет туалет"
+        room: Туалет
+        type: devices.types.light
+      switch.tualet_vit_water_cold:
+        name: "Холодная вода"
+        room: Туалет
+        type: devices.types.openable.valve
+      switch.tualet_vit_water_hot:
+        name: "Горячая вода"
+        room: Туалет
+        type: devices.types.openable.valve
+      switch.tualet_vit:
+        name: "Туалет вытяжка"
+        room: Туалет
+        type: devices.types.other
+      switch.kuhnya_vitajka_kuhnya_vitajka_relay:
+        name: "Вытяжка кухня"
+        room: Кухня
+        type: devices.types.fan
+      sensor.waterius_8931698_ch0:
+        name: "Счетчик горячей воды"
+        room: Туалет
+      sensor.waterius_8931698_ch1:
+        name: "Счетчик холодной воды"
+        room: Туалет

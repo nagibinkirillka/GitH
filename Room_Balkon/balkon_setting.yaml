@@ -1,0 +1,126 @@
+balkon_setting:
+  homeassistant:
+    customize:
+      binary_sensor.0x00158d00070846f9_contact:
+        friendly_name: "Окно балкон"
+        device_class: window
+        icon: mdi:window-open-variant
+      sensor.0x00124b0023a4deca_linkquality:
+        friendly_name: "Окно балкон - связь до ZigBee"
+        icon: mdi:signal
+      switch.lodjiya_sw_relay:
+        friendly_name: "Выключатель балкон"
+        icon: mdi:lightbulb
+      binary_sensor.balkon_windows:
+        friendly_name: "Окно на балконе"
+        device_class: window
+      sensor.0x00158d00070846f9_battery:
+        friendly_name: "Окно балкон"
+        device_class: battery
+      binary_sensor.computer_pc:
+        friendly_name: "Компьютер"
+        device_class: running
+      switch.balkon_switch:
+        friendly_name: "Выключатель балкон"
+        icon: mdi:lightbulb
+      switch.lodjiya_sw_lodjiya_sw_relay:
+        friendly_name: "Реле балкон"
+        icon: mdi:relay
+
+  template:
+    - binary_sensor:
+        - name: balkon_windows
+          device_class: window
+          state: >
+            {{ is_state('binary_sensor.0x00158d00070846f9_contact', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.balkon_windows', 'on') %}
+              mdi:window-open-variant
+            {% else %}
+              mdi:window-closed-variant
+            {% endif %}
+
+    - switch:
+        - turn_on:
+            - entity_id:
+                - switch.lodjiya_sw_lodjiya_sw_relay
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.lodjiya_sw_lodjiya_sw_relay
+              action: switch.turn_off
+          default_entity_id: switch.lodjiya_sw_relay
+          icon: >
+            {% if is_state('switch.balkon_switch', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-outline
+            {% endif %}
+          name: Выключатель балкон
+          state: "{{ is_state('switch.lodjiya_sw_relay', 'on')}}"
+
+        - turn_off:
+            service: hassio.addon_stdin
+            data:
+              addon: core_rpc_shutdown
+              input: "Pc-Family"
+          name: Pc-Family
+          state: "{{ is_state('binary_sensor.computer_pc', 'on')}}"
+
+  script:
+    balkon_cover_25:
+      alias: "Балкон - открыть на 25%"
+      sequence:
+        - service: cover.set_cover_position
+          target:
+            entity_id: cover.0xa4c138130a392f5a
+          data:
+            position: 25
+
+    balkon_cover_50:
+      alias: "Балкон - открыть на 50%"
+      sequence:
+        - service: cover.set_cover_position
+          target:
+            entity_id: cover.0xa4c138130a392f5a
+          data:
+            position: 50
+
+    balkon_cover_75:
+      alias: "Балкон - открыть на 75%"
+      sequence:
+        - service: cover.set_cover_position
+          target:
+            entity_id: cover.0xa4c138130a392f5a
+          data:
+            position: 75
+
+    balkon_cover_close:
+      alias: "Балкон - закрыть"
+      sequence:
+        - service: cover.close_cover
+          target:
+            entity_id: cover.0xa4c138130a392f5a
+
+    balkon_cover_open:
+      alias: "Балкон - открыть"
+      sequence:
+        - service: cover.open_cover
+          target:
+            entity_id: cover.0xa4c138130a392f5a
+          data:
+            value: 50
+
+    balkon_cover_open2:
+      alias: Blinds 50 MQTT
+      sequence:
+        - service: mqtt.publish
+          data:
+            topic: zigbee2mqtt/0xa4c138130a392f5a/set
+            payload: '{ "state": "open", "motor_direction": "normal" }'
+        - delay: 2
+        - service: mqtt.publish
+          data:
+            topic: zigbee2mqtt/0xa4c138130a392f5a/set
+            payload: '{"state":"STOP"}'
+      mode: single

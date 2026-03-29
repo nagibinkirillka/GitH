@@ -1,0 +1,62 @@
+koridor_ya_int:
+  yandex_station_intents:
+    intents:
+      Включи свет в коридоре:
+        extra_phrases:
+          - Коридор свет
+          - Свет в коридоре
+      Выключи свет в коридоре:
+        extra_phrases:
+          - Коридор свет выключить
+      Включи ленту в коридоре:
+        extra_phrases:
+          - Лента коридор
+          - Светодиодная лента коридор
+      Выключи ленту в коридоре:
+        extra_phrases:
+          - Лента коридор выключить
+
+  automation:
+    - alias: Ya_Int_Koridor_Light_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи свет в коридоре
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.koridor_switch
+
+    - alias: Ya_Int_Koridor_Light_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи свет в коридоре
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.koridor_switch
+
+    - alias: Ya_Int_Koridor_LED_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи ленту в коридоре
+      action:
+        - service: light.turn_on
+          entity_id:
+            - light.led_koridor_ws2812b
+
+    - alias: Ya_Int_Koridor_LED_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи ленту в коридоре
+      action:
+        - service: light.turn_off
+          entity_id:
+            - light.led_koridor_ws2812b

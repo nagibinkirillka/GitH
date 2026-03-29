@@ -1,0 +1,67 @@
+bedroom_ya_int:
+  yandex_station_intents:
+    intents:
+      Включи свет в спальне:
+        extra_phrases:
+          - Включи свет в спальной
+          - Свет в спальне
+          - Свет в спальной
+      Выключи свет в спальне:
+        extra_phrases:
+          - Спальня свет выключить
+      Отправь на телевизор в спальне:
+        extra_phrases:
+          - на телевизор в спальне
+          - отправь на телевизор в спальной
+      Подготовка к работе:
+        extra_phrases:
+          - Нехочу на работу
+
+  automation:
+    - alias: Ya_Int_bedroom_Light_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи свет в спальне
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.spalnya_switch
+
+    - alias: Ya_Int_bedroom_Light_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи свет в спальне
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.spalnya_switch
+
+    - alias: Ya_Int_ON_Muz
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Подготовка к работе
+      action:
+        - service: media_player.volume_set
+          data:
+            entity_id:
+              - media_player.yandex_station_ff98f029da2ccfe96d59979c
+              - media_player.yandex_station_ff98f0292dedabbd40dc35d9
+              - media_player.yandex_station_m007e85001yzgb
+              - media_player.yandex_station_r10f2y0001a3gg
+            volume_level: 0.7
+        - delay: 00:00:02
+        - service: media_player.play_media
+          entity_id:
+            - media_player.yandex_station_ff98f029da2ccfe96d59979c
+            - media_player.yandex_station_ff98f0292dedabbd40dc35d9
+            - media_player.yandex_station_m007e85001yzgb
+            - media_player.yandex_station_r10f2y0001a3gg
+          data:
+            media_content_id: https://music.yandex.ru/users/nagibin.kirillka/playlists/3
+            media_content_type: xxx

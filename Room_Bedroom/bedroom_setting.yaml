@@ -1,0 +1,134 @@
+bedroom_setting:
+  homeassistant:
+    customize:
+      switch.0x847127fffea0f2ab:
+        friendly_name: "Выключатель спальня"
+        icon: mdi:lightbulb
+      binary_sensor.spalnya_motion:
+        friendly_name: "Движение спальня"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.pir_sensor_spalnya:
+        friendly_name: "Движение спальня"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.spalnya_afonya:
+        friendly_name: "Афоня"
+        icon: mdi:air-humidifier
+      binary_sensor.spalnya_condition:
+        friendly_name: "Кондиционер - спальня"
+        icon: mdi:air-conditioner
+      sensor.spalnya_temperature_virt:
+        friendly_name: "Средняя температура в спальной"
+        unit_of_measurement: "°C"
+        device_class: temperature
+      sensor.spalnya_humidity_virt:
+        friendly_name: "Средняя влажность в спальной"
+        unit_of_measurement: "%"
+        device_class: humidity
+      sensor.0x00158d000ad98aad_humidity:
+        friendly_name: "Средняя влажность в спальной"
+        unit_of_measurement: "%"
+        device_class: humidity
+      sensor.0x00158d000ad98aad_temperature:
+        friendly_name: "Средняя температура в спальной"
+        unit_of_measurement: "°C"
+        device_class: temperature
+      sensor.0x00158d000ad98aad_battery:
+        friendly_name: "Датчик влажности спальная"
+        device_class: battery
+      humidifier.uvl_spalnia:
+        friendly_name: "Афоня"
+        device_class: humidifier
+        icon: mdi:air-humidifier
+      binary_sensor.0x00158d00068a06f5_contact:
+        friendly_name: "Кондиционер спальня - контакт"
+        device_class: window
+        icon: mdi:air-conditioner
+      sensor.spalnya_temperature:
+        friendly_name: "Температура спальня"
+        unit_of_measurement: "°C"
+        device_class: temperature
+      sensor.spalnya_humidity:
+        friendly_name: "Влажность спальня"
+        unit_of_measurement: "%"
+        device_class: humidity
+      switch.spalnya_switch:
+        friendly_name: "Выключатель спальня"
+        icon: mdi:lightbulb
+
+  template:
+    - binary_sensor:
+        - name: spalnya_motion
+          device_class: motion
+          state: >
+            {{ is_state('binary_sensor.pir_sensor_spalnya', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.spalnya_motion', 'on') %}
+              mdi:motion-sensor
+            {% else %}
+              mdi:motion-sensor-off
+            {% endif %}
+
+        - name: spalnya_condition
+          device_class: window
+          state: >
+            {{ is_state('binary_sensor.0x00158d00068a06f5_contact', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.spalnya_condition', 'on') %}
+              mdi:air-conditioner
+            {% else %}
+              mdi:air-conditioner
+            {% endif %}
+
+        - name: spalnya_afonya
+          state: >
+            {{ is_state('humidifier.uvl_spalnia', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.spalnya_afonya', 'on') %}
+              mdi:air-humidifier
+            {% else %}
+              mdi:air-humidifier
+            {% endif %}
+
+    - sensor:
+        - name: spalnya_temperature_virt
+          unit_of_measurement: "°C"
+          device_class: temperature
+          icon: mdi:temperature-celsius
+          state: >
+            {{ ((
+                (states('sensor.0x00158d000ad98aad_temperature') | float(0)) +
+                (states('sensor.spalnya_temperature') | float(0))
+                ) / 2) | round(2)
+              }}
+
+        - name: spalnya_humidity_virt
+          unit_of_measurement: "%"
+          device_class: humidity
+          icon: mdi:water-percent
+          state: >-
+            {{ ((
+                (states('sensor.0x00158d000ad98aad_humidity') | float(0)) +
+                (states('sensor.spalnya_humidity') | float(0))
+                ) / 2) | round(2)
+              }}
+
+    - switch:
+        - turn_on:
+            - entity_id:
+                - switch.0x847127fffea0f2ab
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0x847127fffea0f2ab
+              action: switch.turn_off
+          default_entity_id: switch.spalnya_switch
+          icon: >
+            {% if is_state('switch.spalnya_switch', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-outline
+            {% endif %}
+          name: Выключатель спальня
+          state: "{{ is_state('switch.0x847127fffea0f2ab', 'on')}}"

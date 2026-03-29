@@ -1,0 +1,98 @@
+kitchen_ya_int:
+  yandex_station_intents:
+    intents:
+      Включи свет в кухне:
+        extra_phrases:
+          - Кухня свет
+          - Свет в кухне
+      Выключи свет в кухне:
+        extra_phrases:
+          - Кухня свет выключить
+      Включи ленту в кухне:
+        extra_phrases:
+          - Лента кухня
+          - Светодиодная лента кухня
+          - Подсветка кухня
+      Выключи ленту в кухне:
+        extra_phrases:
+          - Лента кухня выключить
+          - Подсветка кухня выключить
+      Включи вытяжку в кухне:
+        extra_phrases:
+          - Вытяжка кухня
+          - Включи вытяжку
+      Выключи вытяжку в кухне:
+        extra_phrases:
+          - Вытяжка кухня выключить
+          - Выключи вытяжку
+      Лимончик:
+        extra_phrases:
+          - Что с лимончиком
+          - Как там лимончик
+
+  automation:
+    - alias: Ya_Int_kitchen_Light_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи свет в кухне
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.kuhnya_switch
+
+    - alias: Ya_Int_kitchen_Light_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи свет в кухне
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.kuhnya_switch
+
+    - alias: Ya_Int_kitchen_LED_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи ленту в кухне
+      action:
+        - service: light.turn_on
+          entity_id:
+            - light.led_kuhnja_ws2812_kyhnya
+
+    - alias: Ya_Int_kitchen_LED_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи ленту в кухне
+      action:
+        - service: light.turn_off
+          entity_id:
+            - light.led_kuhnja_ws2812_kyhnya
+
+    - alias: Ya_Int_kitchen_Vitajka_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Включи вытяжку в кухне
+      action:
+        - service: switch.turn_on
+          entity_id:
+            - switch.kuhnya_vitajka_kuhnya_vitajka_relay
+
+    - alias: Ya_Int_kitchen_Vitajka_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Выключи вытяжку в кухне
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.kuhnya_vitajka_kuhnya_vitajka_relay

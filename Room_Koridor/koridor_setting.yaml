@@ -1,0 +1,209 @@
+koridor_setting:
+  homeassistant:
+    customize:
+      binary_sensor.0x00158d00072b8cc8_contact:
+        friendly_name: "Входная дверь"
+        device_class: door
+      sensor.0x00158d00072b8cc8_battery:
+        friendly_name: "Входная дверь - батарейка датчика"
+        device_class: battery
+      sensor.0x00158d00072b8cc8_zigbee:
+        friendly_name: "Входная дверь - связь ZigBee"
+        icon: mdi:zigbee
+      switch.0x60a423fffe6c9135:
+        friendly_name: "Выключатель коридор - свет"
+        icon: mdi:lightbulb
+      sensor.0x60a423fffe6c9135_linkquality:
+        friendly_name: "Выключатель коридор - связь ZigBee"
+        icon: mdi:signal
+      binary_sensor.koridor_motion:
+        friendly_name: "Движение коридор"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.582d3460d99b_motion:
+        friendly_name: "Движение коридор - датчик"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.koridor_door:
+        friendly_name: "Входная дверь"
+        device_class: door
+        icon: mdi:door-open
+      sensor.koridor_temperature_virt:
+        friendly_name: "Средняя температура коридор"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      sensor.koridor_humidity_virt:
+        friendly_name: "Средняя влажность коридор"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.koridor_temperature:
+        friendly_name: "Температура коридор"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      sensor.koridor_humidity:
+        friendly_name: "Влажность коридор"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.0x00158d0006e3d63e_action:
+        friendly_name: "Звонок в коридоре"
+      sensor.0x00158d0006e3d63e_battery:
+        friendly_name: "Звонок в коридоре"
+        device_class: battery
+      sensor.0x00158d0006e3d63e_zigbee:
+        friendly_name: "Звонок в коридоре"
+        icon: mdi:zigbee
+      sensor.0xa4c13867a08fb69c_temperature:
+        friendly_name: "Датчик температуры коридор"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      sensor.0xa4c13867a08fb69c_humidity:
+        friendly_name: "Датчик влажности коридор"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.a4c13867a08f_battery:
+        friendly_name: "Датчик температуры коридор"
+        device_class: battery
+      light.led_koridor_ws2812b:
+        friendly_name: "Светодиодная лента в коридоре"
+      media_player.yandex_station_ff98f029da2ccfe96d59979c:
+        friendly_name: "Яндекс станция в коридоре"
+      switch.koridor_switch:
+        friendly_name: "Выключатель коридор"
+        icon: mdi:lightbulb
+
+  template:
+    - binary_sensor:
+        - name: koridor_motion
+          device_class: motion
+          state: >
+            {{ is_state('binary_sensor.582d3460d99b_motion', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.koridor_motion', 'on') %}
+              mdi:motion-sensor
+            {% else %}
+              mdi:motion-sensor-off
+            {% endif %}
+
+        - name: koridor_door
+          device_class: door
+          state: >
+            {{ is_state('binary_sensor.0x00158d00072b8cc8_contact', 'on') }}
+          icon: >
+            {% if is_state('binary_sensor.koridor_door', 'on') %}
+              mdi:door-open
+            {% else %}
+              mdi:door-closed
+            {% endif %}
+
+    - sensor:
+        - name: koridor_temperature_virt
+          unit_of_measurement: "°C"
+          device_class: temperature
+          icon: mdi:temperature-celsius
+          state: >
+            {{ ((
+                (states('sensor.0xa4c13867a08fb69c_temperature') | float(0)) +
+                (states('sensor.koridor_temperature') | float(0))
+                ) / 2) | round(2)
+              }}
+
+        - name: koridor_humidity_virt
+          unit_of_measurement: "%"
+          device_class: humidity
+          icon: mdi:water-percent
+          state: >
+            {{ ((
+                (states('sensor.0xa4c13867a08fb69c_humidity') | float(0)) +
+                (states('sensor.koridor_humidity') | float(0))
+                ) / 2) | round(2)
+              }}
+
+    - switch:
+        - turn_on:
+            - entity_id:
+                - switch.0x60a423fffe6c9135
+              action: switch.turn_on
+          turn_off:
+            - entity_id:
+                - switch.0x60a423fffe6c9135
+              action: switch.turn_off
+          default_entity_id: switch.koridor_switch
+          icon: >
+            {% if is_state('switch.koridor_switch', 'on') %}
+              mdi:lightbulb
+            {% else %}
+              mdi:lightbulb-outline
+            {% endif %}
+          name: Выключатель коридор
+          state: "{{ is_state('switch.0x60a423fffe6c9135', 'on')}}"
+
+  automation:
+    - alias: Koridor-Off_5min_no_motion
+      description: ""
+      mode: single
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.koridor_motion
+          to: "off"
+          for: 00:03:00
+      condition:
+        - condition: state
+          entity_id: switch.koridor_switch
+          state: "on"
+      action:
+        - service: switch.turn_off
+          entity_id: switch.koridor_switch
+
+    - alias: Koridor-led_brightness_motion
+      initial_state: true
+      trigger:
+        - platform: state
+          entity_id: binary_sensor.koridor_motion
+          to: "on"
+      condition:
+        - condition: time
+          after: "18:00:00"
+          before: "06:00:00"
+      action:
+        - service: light.turn_on
+          entity_id:
+            - light.led_koridor_ws2812b
+          data_template:
+            brightness_pct: 11
+            rgb_color: [255, 255, 255]
+
+    - alias: Koridor-led_ON_brightness_16-00
+      description: ""
+      mode: single
+      trigger:
+        - platform: time
+          at: "16:00"
+      condition: []
+      action:
+        - service: light.turn_on
+          target:
+            entity_id: light.led_koridor_ws2812b
+          data_template:
+            brightness_pct: 11
+            rgb_color: [255, 255, 255]
+            transition: 5
+
+    - alias: Koridor-Off_led_syn_sunrise
+      description: ""
+      mode: single
+      trigger:
+        - platform: sun
+          event: sunrise
+      condition: []
+      action:
+        - service: light.turn_off
+          entity_id:
+            - light.led_koridor_ws2812b
+          data:
+            transition: 5
