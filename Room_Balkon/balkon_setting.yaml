@@ -68,6 +68,15 @@ balkon_setting:
           state: "{{ is_state('binary_sensor.computer_pc', 'on')}}"
 
   script:
+    balkon_cover_3:
+      alias: "Балкон - открыть на 5%"
+      sequence:
+        - service: cover.set_cover_position
+          target:
+            entity_id: cover.0xa4c138130a392f5a
+          data:
+            position: 5
+
     balkon_cover_25:
       alias: "Балкон - открыть на 25%"
       sequence:
@@ -76,6 +85,15 @@ balkon_setting:
             entity_id: cover.0xa4c138130a392f5a
           data:
             position: 25
+
+    balkon_cover_45:
+      alias: "Балкон - открыть на 45%"
+      sequence:
+        - service: cover.set_cover_position
+          target:
+            entity_id: cover.0xa4c138130a392f5a
+          data:
+            position: 45
 
     balkon_cover_50:
       alias: "Балкон - открыть на 50%"
