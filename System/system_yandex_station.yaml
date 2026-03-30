@@ -1,347 +1,347 @@
-# system_yandex_station:
-#   homeassistant:
-#     customize:
-#       media_player.media_player_groups:
-#         friendly_name: "Группа Алис"
-#       script.do_vechera_all_off:
-#         friendly_name: "Отключение через Алису"
-#       script.slip_all_off:
-#         friendly_name: "Отключение через Алису"
-#       sensor.yandex_station_waiting:
-#         friendly_name: "Яндекс станция в ожидании"
-#       sensor.yandex_station_last_activity:
-#         friendly_name: "Последняя активная яндекс станция"
-#       sensor.yandex_station_last_activity_name:
-#         friendly_name: "Последняя активная яндекс станция"
+system_yandex_station:
+  homeassistant:
+    customize:
+      media_player.media_player_groups:
+        friendly_name: "Группа Алис"
+      script.do_vechera_all_off:
+        friendly_name: "Отключение через Алису"
+      script.slip_all_off:
+        friendly_name: "Отключение через Алису"
+      sensor.yandex_station_waiting:
+        friendly_name: "Яндекс станция в ожидании"
+      sensor.yandex_station_last_activity:
+        friendly_name: "Последняя активная яндекс станция"
+      sensor.yandex_station_last_activity_name:
+        friendly_name: "Последняя активная яндекс станция"
 
-#   group:
-#     yandex stations:
-#       name: "Яндекс станции"
-#       all: false
-#       entities:
-#         - media_player.yandex_station_ff98f029da2ccfe96d59979c
-#         - media_player.yandex_station_ff98f0292dedabbd40dc35d9
-#         - media_player.yandex_station_m007e85001yzgb
-#         - media_player.yandex_station_r10f2y0001a3gg
+  group:
+    yandex stations:
+      name: "Яндекс станции"
+      all: false
+      entities:
+        - media_player.yandex_station_ff98f029da2ccfe96d59979c
+        - media_player.yandex_station_ff98f0292dedabbd40dc35d9
+        - media_player.yandex_station_m007e85001yzgb
+        - media_player.yandex_station_r10f2y0001a3gg
 
-#     yandex stations2:
-#       name: "Яндекс станции без детской"
-#       all: false
-#       entities:
-#         - media_player.yandex_station_ff98f0292dedabbd40dc35d9
-#         - media_player.yandex_station_m007e85001yzgb
+    yandex stations2:
+      name: "Яндекс станции без детской"
+      all: false
+      entities:
+        - media_player.yandex_station_ff98f0292dedabbd40dc35d9
+        - media_player.yandex_station_m007e85001yzgb
 
-#   input_text:
-#     yandex_station_last_activity:
-#       name: "Последняя активная колонка"
-#       min: 0
-#       max: 100
-#       icon: mdi:account-tie-voice
+  input_text:
+    yandex_station_last_activity:
+      name: "Последняя активная колонка"
+      min: 0
+      max: 100
+      icon: mdi:account-tie-voice
 
-#     yandex_station_last_activity_name:
-#       name: "Последняя активная колонка. Имя колонки"
-#       min: 0
-#       max: 100
-#       icon: mdi:account-tie-voice
+    yandex_station_last_activity_name:
+      name: "Последняя активная колонка. Имя колонки"
+      min: 0
+      max: 100
+      icon: mdi:account-tie-voice
 
-#   yandex_station_intents:
-#     intents:
-#       Кто нибудь дома: Сейчас проверю # (2)
-#       Я ушел: # (3)
-#         extra_phrases: # альтернативные фразы, максимум три
-#           - До вечера
-#           - Я наработу
-#           - Выключи все
+  yandex_station_intents:
+    intents:
+      Кто нибудь дома: Сейчас проверю # (2)
+      Я ушел: # (3)
+        extra_phrases: # альтернативные фразы, максимум три
+          - До вечера
+          - Я наработу
+          - Выключи все
 
-#   template:
-#     - sensor:
-#         - name: yandex_station_waiting
-#           # friendly_name: "Яндекс станция в ожидании"
-#           state: >
-#             {% if expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='entity_id') | list %}
-#             LISTENING
-#             {% else %}
-#             IDLE
-#             {% endif %}
-#           icon: >
-#             {% if is_state('sensor.yandex_station_waiting', 'IDLE') %}
-#               mdi:account-tie-voice-off
-#             {% else %}
-#               mdi:account-tie-voice
-#             {% endif %}
+  template:
+    - sensor:
+        - name: yandex_station_waiting
+          # friendly_name: "Яндекс станция в ожидании"
+          state: >
+            {% if expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='entity_id') | list %}
+            LISTENING
+            {% else %}
+            IDLE
+            {% endif %}
+          icon: >
+            {% if is_state('sensor.yandex_station_waiting', 'IDLE') %}
+              mdi:account-tie-voice-off
+            {% else %}
+              mdi:account-tie-voice
+            {% endif %}
 
-#         #Сенсор последней активной яндекс колонки
-#         - name: yandex_station_last_activity
-#           # friendly_name: "Последняя активная яндекс станция"
-#           state: >
-#             {% if expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='entity_id') | list | join(",") %}
-#             {{ expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='entity_id') | list | join(",") }}
-#             {% else %}
-#             off
-#             {% endif %}
-#           icon: >
-#             {% if is_state('sensor.yandex_station_last_activity', 'unknown') %}
-#               mdi:account-tie-voice-off
-#             {% else %}
-#               mdi:account-tie-voice
-#             {% endif %}
+        #Сенсор последней активной яндекс колонки
+        - name: yandex_station_last_activity
+          # friendly_name: "Последняя активная яндекс станция"
+          state: >
+            {% if expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='entity_id') | list | join(",") %}
+            {{ expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='entity_id') | list | join(",") }}
+            {% else %}
+            off
+            {% endif %}
+          icon: >
+            {% if is_state('sensor.yandex_station_last_activity', 'unknown') %}
+              mdi:account-tie-voice-off
+            {% else %}
+              mdi:account-tie-voice
+            {% endif %}
 
-#         - name: yandex_station_last_activity_name
-#           # friendly_name: "Последняя активная яндекс станция"
-#           state: >-
-#             {% if expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='name') | list | join(",") %}
-#             {{ expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='name') | list | join(",") }}
-#             {% else %}
-#             off
-#             {% endif %}
-#           icon: >-
-#             {% if is_state('sensor.yandex_station_last_activity', 'unknown') %}
-#               mdi:account-tie-voice-off
-#             {% else %}
-#               mdi:account-tie-voice
-#             {% endif %}
+        - name: yandex_station_last_activity_name
+          # friendly_name: "Последняя активная яндекс станция"
+          state: >-
+            {% if expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='name') | list | join(",") %}
+            {{ expand('group.yandex_stations') | selectattr('attributes.alice_state', 'eq', 'LISTENING') | map(attribute='name') | list | join(",") }}
+            {% else %}
+            off
+            {% endif %}
+          icon: >-
+            {% if is_state('sensor.yandex_station_last_activity', 'unknown') %}
+              mdi:account-tie-voice-off
+            {% else %}
+              mdi:account-tie-voice
+            {% endif %}
 
-#     - binary_sensor:
-#         #Сенсоры отключения колонками локального режима
-#         - name: yandex_station_ff98f0292dedabbd40dc35d9_assumed_state
-#           icon: mdi:cloud-alert
-#           availability: "{{ not is_state('media_player.yandex_station_ff98f0292dedabbd40dc35d9', 'unavailable') }}"
-#           state: "{{ is_state_attr('media_player.yandex_station_ff98f0292dedabbd40dc35d9', 'assumed_state', true) }}"
-#           delay_on:
-#             seconds: 5
-#           delay_off:
-#             seconds: 5
+    - binary_sensor:
+        #Сенсоры отключения колонками локального режима
+        - name: yandex_station_ff98f0292dedabbd40dc35d9_assumed_state
+          icon: mdi:cloud-alert
+          availability: "{{ not is_state('media_player.yandex_station_ff98f0292dedabbd40dc35d9', 'unavailable') }}"
+          state: "{{ is_state_attr('media_player.yandex_station_ff98f0292dedabbd40dc35d9', 'assumed_state', true) }}"
+          delay_on:
+            seconds: 5
+          delay_off:
+            seconds: 5
 
-#         - name: yandex_station_ff98f029da2ccfe96d59979c_assumed_state
-#           icon: mdi:cloud-alert
-#           availability: "{{ not is_state('media_player.yandex_station_ff98f029da2ccfe96d59979c', 'unavailable') }}"
-#           state: "{{ is_state_attr('media_player.yandex_station_ff98f029da2ccfe96d59979c', 'assumed_state', true) }}"
-#           delay_on:
-#             seconds: 5
-#           delay_off:
-#             seconds: 5
+        - name: yandex_station_ff98f029da2ccfe96d59979c_assumed_state
+          icon: mdi:cloud-alert
+          availability: "{{ not is_state('media_player.yandex_station_ff98f029da2ccfe96d59979c', 'unavailable') }}"
+          state: "{{ is_state_attr('media_player.yandex_station_ff98f029da2ccfe96d59979c', 'assumed_state', true) }}"
+          delay_on:
+            seconds: 5
+          delay_off:
+            seconds: 5
 
-#         - name: yandex_station_m007e85001yzgb_assumed_state
-#           icon: mdi:cloud-alert
-#           availability: "{{ not is_state('media_player.yandex_station_m007e85001yzgb', 'unavailable') }}"
-#           state: "{{ is_state_attr('media_player.yandex_station_m007e85001yzgb', 'assumed_state', true) }}"
-#           delay_on:
-#             seconds: 5
-#           delay_off:
-#             seconds: 5
+        - name: yandex_station_m007e85001yzgb_assumed_state
+          icon: mdi:cloud-alert
+          availability: "{{ not is_state('media_player.yandex_station_m007e85001yzgb', 'unavailable') }}"
+          state: "{{ is_state_attr('media_player.yandex_station_m007e85001yzgb', 'assumed_state', true) }}"
+          delay_on:
+            seconds: 5
+          delay_off:
+            seconds: 5
 
-#         - name: yandex_station_r10f2y0001a3gg_assumed_state
-#           icon: mdi:cloud-alert
-#           availability: "{{ not is_state('media_player.yandex_station_m007e85001yzgb', 'unavailable') }}"
-#           state: "{{ is_state_attr('media_player.yandex_station_m007e85001yzgb', 'assumed_state', true) }}"
-#           delay_on:
-#             seconds: 5
-#           delay_off:
-#             seconds: 5
+        - name: yandex_station_r10f2y0001a3gg_assumed_state
+          icon: mdi:cloud-alert
+          availability: "{{ not is_state('media_player.yandex_station_m007e85001yzgb', 'unavailable') }}"
+          state: "{{ is_state_attr('media_player.yandex_station_m007e85001yzgb', 'assumed_state', true) }}"
+          delay_on:
+            seconds: 5
+          delay_off:
+            seconds: 5
 
-#   automation:
-#     #Автоматизация: Последняя активная колонка
+  automation:
+    #Автоматизация: Последняя активная колонка
 
-#     - alias: "Последняя активная колонка"
-#       description: "Последняя активная колонка"
-#       trigger:
-#         - platform: state
-#           entity_id: sensor.yandex_station_last_activity
-#           from: "off"
-#           to: "*"
-#       condition:
-#       action:
-#         - service: input_text.set_value
-#           target:
-#             entity_id: input_text.yandex_station_last_activity
-#           data:
-#             value: "{{states.sensor.yandex_station_last_activity.state}}"
+    - alias: "Последняя активная колонка"
+      description: "Последняя активная колонка"
+      trigger:
+        - platform: state
+          entity_id: sensor.yandex_station_last_activity
+          from: "off"
+          to: "*"
+      condition:
+      action:
+        - service: input_text.set_value
+          target:
+            entity_id: input_text.yandex_station_last_activity
+          data:
+            value: "{{states.sensor.yandex_station_last_activity.state}}"
 
-#     #Автоматизация: Последняя активная колонка
-#     - alias: "Последняя активная колонка. Имя колонки"
-#       description: "Последняя активная колонка. Имя колонки"
-#       trigger:
-#         - platform: state
-#           entity_id: sensor.yandex_station_last_activity_name
-#           from: "off"
-#           to: "*"
-#       condition:
-#       action:
-#         - service: input_text.set_value
-#           target:
-#             entity_id: input_text.yandex_station_last_activity_name
-#           data:
-#             value: "{{states.sensor.yandex_station_last_activity_name.state}}"
+    #Автоматизация: Последняя активная колонка
+    - alias: "Последняя активная колонка. Имя колонки"
+      description: "Последняя активная колонка. Имя колонки"
+      trigger:
+        - platform: state
+          entity_id: sensor.yandex_station_last_activity_name
+          from: "off"
+          to: "*"
+      condition:
+      action:
+        - service: input_text.set_value
+          target:
+            entity_id: input_text.yandex_station_last_activity_name
+          data:
+            value: "{{states.sensor.yandex_station_last_activity_name.state}}"
 
-#     - alias: Ya_Int_Do_vechera
-#       trigger:
-#         - platform: event
-#           event_type: yandex_intent
-#           event_data:
-#             text: Я ушел # пример (2)
-#       action:
-#         - service: media_player.play_media
-#           target:
-#             entity_id: "{{ trigger.event.data.entity_id }}" # ответит колонка, которая услышала "Алиса, кто нибудь дома"
-#           data:
-#             media_content_type: text
-#             media_content_id: |-
-#               {% if is_state('binary_sensor.detskaya_windows', 'on') %} Окно в детской открыто {% endif %}
-#               {% if is_state('binary_sensor.balkon_windows', 'on') %} Окно на балконе открыто {% endif %}
-#               {% if is_state('binary_sensor.kuhnya_windows', 'on') %} Окно на кухне открыто {% endif %}
-#               {% if is_state('binary_sensor.windows_all_off', 'off') %} Окна закрыты {% endif %}
-#         - delay: "00:00:05"
-#         - service: script.turn_on
-#           target:
-#             entity_id: script.do_vechera_all_off
+    - alias: Ya_Int_Do_vechera
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Я ушел # пример (2)
+      action:
+        - service: media_player.play_media
+          target:
+            entity_id: "{{ trigger.event.data.entity_id }}" # ответит колонка, которая услышала "Алиса, кто нибудь дома"
+          data:
+            media_content_type: text
+            media_content_id: |-
+              {% if is_state('binary_sensor.detskaya_windows', 'on') %} Окно в детской открыто {% endif %} 
+              {% if is_state('binary_sensor.balkon_windows', 'on') %} Окно на балконе открыто {% endif %} 
+              {% if is_state('binary_sensor.kuhnya_windows', 'on') %} Окно на кухне открыто {% endif %}
+              {% if is_state('binary_sensor.windows_all_off', 'off') %} Окна закрыты {% endif %}
+        - delay: "00:00:05"
+        - service: script.turn_on
+          target:
+            entity_id: script.do_vechera_all_off
 
-#     - alias: Кто нибудь дома
-#       trigger:
-#         - platform: event
-#           event_type: yandex_intent
-#           event_data:
-#             text: Кто нибудь дома # пример (2)
-#       action:
-#         - service: media_player.play_media
-#           target:
-#             entity_id: "{{ trigger.event.data.entity_id }}" # ответит колонка, которая услышала "Алиса, кто нибудь дома"
-#           data:
-#             media_content_type: text
-#             media_content_id: |-
-#               {% if is_state('binary_sensor.motion_all', 'off') %} Дома никого нет {% endif %}
-#               {% if is_state('binary_sensor.motion_all', 'on') %} Дома есть движение {% endif %}
+    - alias: Кто нибудь дома
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Кто нибудь дома # пример (2)
+      action:
+        - service: media_player.play_media
+          target:
+            entity_id: "{{ trigger.event.data.entity_id }}" # ответит колонка, которая услышала "Алиса, кто нибудь дома"
+          data:
+            media_content_type: text
+            media_content_id: |-
+              {% if is_state('binary_sensor.motion_all', 'off') %} Дома никого нет {% endif %} 
+              {% if is_state('binary_sensor.motion_all', 'on') %} Дома есть движение {% endif %}
 
-#     # - alias: Детская Голос                                   # поменяйте на своё имя
-#     #   trigger:
-#     #     - platform: event
-#     #       event_type: yandex_speaker
-#     #       event_data:
-#     #         entity_id: media_player.yandex_station_ff98f029da2ccfe96d59979c  # поменяйте на свою колонку из пункта 1
-#     #         value: Сделай тише на 0                      # поменяйте на свою фразу из пункта 1
-#     #   condition: []
-#     #   action:
-#     #     - service: input_boolean.turn_on
-#     #       target:
-#     #         entity_id: input_boolean.detskaia_golos           # поменяйте на свой выключатель из пункта 2
-#     #     - delay:
-#     #         hours: 0
-#     #         minutes: 0
-#     #         seconds: 30
-#     #         milliseconds: 0
-#     #     - service: media_player.play_media
-#     #       data:
-#     #         media_content_id: Детская Голос                  # поменяйте на свой сценарий из пункта 1
-#     #         media_content_type: update_scenario
-#     #       target:
-#     #         entity_id: media_player.yandex_station_ff98f029da2ccfe96d59979c  # поменяйте на любую свою колонку
-#     #     - delay:
-#     #         hours: 0
-#     #         minutes: 1
-#     #         seconds: 30
-#     #         milliseconds: 0
-#     #     - service: input_boolean.turn_off
-#     #       target:
-#     #         entity_id: input_boolean.detskaia_golos           # поменяйте на свой выключатель из пункта 2
-#     #   mode: restart
+    # - alias: Детская Голос                                   # поменяйте на своё имя
+    #   trigger:
+    #     - platform: event
+    #       event_type: yandex_speaker
+    #       event_data:
+    #         entity_id: media_player.yandex_station_ff98f029da2ccfe96d59979c  # поменяйте на свою колонку из пункта 1
+    #         value: Сделай тише на 0                      # поменяйте на свою фразу из пункта 1
+    #   condition: []
+    #   action:
+    #     - service: input_boolean.turn_on
+    #       target:
+    #         entity_id: input_boolean.detskaia_golos           # поменяйте на свой выключатель из пункта 2
+    #     - delay:
+    #         hours: 0
+    #         minutes: 0
+    #         seconds: 30
+    #         milliseconds: 0
+    #     - service: media_player.play_media
+    #       data:
+    #         media_content_id: Детская Голос                  # поменяйте на свой сценарий из пункта 1
+    #         media_content_type: update_scenario
+    #       target:
+    #         entity_id: media_player.yandex_station_ff98f029da2ccfe96d59979c  # поменяйте на любую свою колонку
+    #     - delay:
+    #         hours: 0
+    #         minutes: 1
+    #         seconds: 30
+    #         milliseconds: 0
+    #     - service: input_boolean.turn_off
+    #       target:
+    #         entity_id: input_boolean.detskaia_golos           # поменяйте на свой выключатель из пункта 2
+    #   mode: restart
 
-#     # - alias: Спальня Голос                                   # поменяйте на своё имя
-#     #   trigger:
-#     #     - platform: event
-#     #       event_type: yandex_speaker
-#     #       event_data:
-#     #         entity_id: media_player.yandex_station_m007e85001yzgb  # поменяйте на свою колонку из пункта 1
-#     #         value: Сделай тише на 0                      # поменяйте на свою фразу из пункта 1
-#     #   condition: []
-#     #   action:
-#     #     - service: input_boolean.turn_on
-#     #       target:
-#     #         entity_id: input_boolean.spalnia_golos           # поменяйте на свой выключатель из пункта 2
-#     #     - delay:
-#     #         hours: 0
-#     #         minutes: 0
-#     #         seconds: 30
-#     #         milliseconds: 0
-#     #     - service: media_player.play_media
-#     #       data:
-#     #         media_content_id: Спальня Голос                  # поменяйте на свой сценарий из пункта 1
-#     #         media_content_type: update_scenario
-#     #       target:
-#     #         entity_id: media_player.yandex_station_m007e85001yzgb  # поменяйте на любую свою колонку
-#     #     - delay:
-#     #         hours: 0
-#     #         minutes: 1
-#     #         seconds: 30
-#     #         milliseconds: 0
-#     #     - service: input_boolean.turn_off
-#     #       target:
-#     #         entity_id: input_boolean.spalnia_golos           # поменяйте на свой выключатель из пункта 2
-#     #   mode: restart
+    # - alias: Спальня Голос                                   # поменяйте на своё имя
+    #   trigger:
+    #     - platform: event
+    #       event_type: yandex_speaker
+    #       event_data:
+    #         entity_id: media_player.yandex_station_m007e85001yzgb  # поменяйте на свою колонку из пункта 1
+    #         value: Сделай тише на 0                      # поменяйте на свою фразу из пункта 1
+    #   condition: []
+    #   action:
+    #     - service: input_boolean.turn_on
+    #       target:
+    #         entity_id: input_boolean.spalnia_golos           # поменяйте на свой выключатель из пункта 2
+    #     - delay:
+    #         hours: 0
+    #         minutes: 0
+    #         seconds: 30
+    #         milliseconds: 0
+    #     - service: media_player.play_media
+    #       data:
+    #         media_content_id: Спальня Голос                  # поменяйте на свой сценарий из пункта 1
+    #         media_content_type: update_scenario
+    #       target:
+    #         entity_id: media_player.yandex_station_m007e85001yzgb  # поменяйте на любую свою колонку
+    #     - delay:
+    #         hours: 0
+    #         minutes: 1
+    #         seconds: 30
+    #         milliseconds: 0
+    #     - service: input_boolean.turn_off
+    #       target:
+    #         entity_id: input_boolean.spalnia_golos           # поменяйте на свой выключатель из пункта 2
+    #   mode: restart
 
-#   script:
-#     do_vechera_all_off:
-#       sequence:
-#         - service: switch.turn_off
-#           entity_id:
-#             - switch.pc01
-#             - switch.kuhnya_switch
-#             - switch.tualet_switch
-#             - switch.vanaya_switch
-#             - switch.koridor_switch
-#             - switch.detskaya_l_switch
-#             - switch.detskaya_r_switch
-#             - switch.spalnya_switch
-#         - service: light.turn_off
-#           entity_id:
-#             # - light.fastled_ws2812b_detskaya
-#             - light.fastled_ws2812b_koridor
-#         - service: media_player.turn_off
-#           entity_id:
-#             - media_player.yandex_station_r10f2y0001a3gg
-#             - media_player.yandex_station_ff98f029da2ccfe96d59979c
-#             - media_player.yandex_station_ff98f0292dedabbd40dc35d9
-#             - media_player.yandex_station_m007e85001yzgb
-#             - media_player.lg_webos_tv_uk6300plb
-#             - media_player.lg_webos_tv_un81006lb
+  script:
+    do_vechera_all_off:
+      sequence:
+        - service: switch.turn_off
+          entity_id:
+            - switch.pc01
+            - switch.kuhnya_switch
+            - switch.tualet_switch
+            - switch.vanaya_switch
+            - switch.koridor_switch
+            - switch.detskaya_l_switch
+            - switch.detskaya_r_switch
+            - switch.spalnya_switch
+        - service: light.turn_off
+          entity_id:
+            # - light.fastled_ws2812b_detskaya
+            - light.fastled_ws2812b_koridor
+        - service: media_player.turn_off
+          entity_id:
+            - media_player.yandex_station_r10f2y0001a3gg
+            - media_player.yandex_station_ff98f029da2ccfe96d59979c
+            - media_player.yandex_station_ff98f0292dedabbd40dc35d9
+            - media_player.yandex_station_m007e85001yzgb
+            - media_player.lg_webos_tv_uk6300plb
+            - media_player.lg_webos_tv_un81006lb
 
-#     slip_all_off:
-#       sequence:
-#         - service: switch.turn_off
-#           entity_id:
-#             - switch.pc01
-#             - switch.kuhnya_switch
-#             - switch.tualet_switch
-#             - switch.vanaya_switch
-#             - switch.koridor_switch
-#             - switch.detskaya_l_switch
-#             - switch.detskaya_r_switch
-#             - switch.spalnya_switch
-#         - service: media_player.turn_off
-#           entity_id:
-#             - media_player.yandex_station_ff98f029da2ccfe96d59979c
-#             - media_player.yandex_station_ff98f0292dedabbd40dc35d9
-#             - media_player.yandex_station_m007e85001yzgb
-#             - media_player.yandex_station_r10f2y0001a3gg
-#             - media_player.lg_webos_tv_uk6300plb
-#             - media_player.lg_webos_tv_un81006lb
+    slip_all_off:
+      sequence:
+        - service: switch.turn_off
+          entity_id:
+            - switch.pc01
+            - switch.kuhnya_switch
+            - switch.tualet_switch
+            - switch.vanaya_switch
+            - switch.koridor_switch
+            - switch.detskaya_l_switch
+            - switch.detskaya_r_switch
+            - switch.spalnya_switch
+        - service: media_player.turn_off
+          entity_id:
+            - media_player.yandex_station_ff98f029da2ccfe96d59979c
+            - media_player.yandex_station_ff98f0292dedabbd40dc35d9
+            - media_player.yandex_station_m007e85001yzgb
+            - media_player.yandex_station_r10f2y0001a3gg
+            - media_player.lg_webos_tv_uk6300plb
+            - media_player.lg_webos_tv_un81006lb
 
-#     yandex_play_url:
-#       alias: Проигрывание медиа по ссылке
-#       sequence:
-#         - service: media_player.play_media
-#           entity_id: media_player.yandex_station_r10f2y0001a3gg # замените на вашу колонку
-#           data:
-#             media_content_id: Поставь на всех колонках звук 7
-#             media_content_type: command
-#         - delay: 00:00:02
-#         - service: media_player.play_media
-#           entity_id: media_player.yandex_station_r10f2y0001a3gg # замените на вашу колонку
-#           data:
-#             media_content_id: Включи на всех колонках музыку
-#             media_content_type: command
-#         - delay: 00:00:05
-#         - service: media_player.play_media
-#           entity_id: media_player.yandex_station_r10f2y0001a3gg # замените на вашу колонку
-#           data:
-#             media_content_id: https://music.yandex.ru/users/nagibin.kirillka/playlists/3
-#             media_content_type: xxx # тип не важен, но должен быть!
+    yandex_play_url:
+      alias: Проигрывание медиа по ссылке
+      sequence:
+        - service: media_player.play_media
+          entity_id: media_player.yandex_station_r10f2y0001a3gg # замените на вашу колонку
+          data:
+            media_content_id: Поставь на всех колонках звук 7
+            media_content_type: command
+        - delay: 00:00:02
+        - service: media_player.play_media
+          entity_id: media_player.yandex_station_r10f2y0001a3gg # замените на вашу колонку
+          data:
+            media_content_id: Включи на всех колонках музыку
+            media_content_type: command
+        - delay: 00:00:05
+        - service: media_player.play_media
+          entity_id: media_player.yandex_station_r10f2y0001a3gg # замените на вашу колонку
+          data:
+            media_content_id: https://music.yandex.ru/users/nagibin.kirillka/playlists/3
+            media_content_type: xxx # тип не важен, но должен быть!
 

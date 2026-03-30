@@ -1,0 +1,22 @@
+system_climate:
+  homeassistant:
+    customize:
+
+  climate:
+    - platform: smartir
+      name: Spalnya AC
+      unique_id: spalnya_ac
+      device_code: 1800
+      controller_data: remote.zhi_neng_yao_kong
+      temperature_sensor: sensor.spalnya_temperature_virt
+      humidity_sensor: sensor.spalnya_humidity_virt
+      power_sensor: binary_sensor.spalnya_condition
+
+    - platform: smartir
+      name: Detskaya AC
+      unique_id: detskaya_ac
+      device_code: 1800
+      controller_data: remote.rm4c
+      temperature_sensor: sensor.detskaya_temperature_virt
+      humidity_sensor: sensor.detskaya_humidity_virt
+      power_sensor: binary_sensor.detskaya_condition
