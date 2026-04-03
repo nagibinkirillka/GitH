@@ -1,10 +1,6 @@
 toilet_setting:
   homeassistant:
     customize:
-      binary_sensor.0x00158d00070846e8_contact:
-        friendly_name: "Дверь в туалет"
-        icon: mdi:door-open
-        device_class: door
       sensor.0x00158d00070846e8_battery:
         friendly_name: "Дверь в туалет"
         device_class: battery
@@ -17,10 +13,24 @@ toilet_setting:
       switch.0x60a423fffee6ab1e_right:
         friendly_name: "Выключатель туалет"
         icon: mdi:lightbulb
+      sensor.582d3460db86_illuminance:
+        friendly_name: "Освещение туалет"
       binary_sensor.toilet_door:
         friendly_name: "Дверь в туалет"
         icon: mdi:door-open
         device_class: door
+      binary_sensor.0x00158d00070846e8_contact:
+        friendly_name: "Дверь в туалет"
+        icon: mdi:door-open
+        device_class: door
+      binary_sensor.582d3460db86_motion:
+        friendly_name: "Движение туалет - датчик"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.649e314c5742_occupancy:
+        friendly_name: "Движение туалет - датчик 2"
+        device_class: motion
+        icon: mdi:motion-sensor
       binary_sensor.toilet_motion:
         friendly_name: "Движение в туалете"
         device_class: motion
@@ -41,33 +51,51 @@ toilet_setting:
       sensor.0x00158d0008dfef37_battery:
         device_class: battery
         friendly_name: "Датчик протечки воды туалет - унитаз"
-      switch.tualet_vit_water_cold:
-        friendly_name: "Холодная вода"
-        icon: mdi:water
-      switch.tualet_vit_water_hot:
-        friendly_name: "Горячая вода"
-        icon: mdi:water
-      binary_sensor.582d3460db86_motion:
-        friendly_name: "Движение туалет - датчик"
-        device_class: motion
-        icon: mdi:motion-sensor
-      binary_sensor.649e314c5742_occupancy:
-        friendly_name: "Движение туалет - датчик 2"
-        device_class: motion
-        icon: mdi:motion-sensor
+      sensor.0x00158d0008dfef37_zigbee:
+        icon: mdi:zigbee
+        friendly_name: "Датчик протечки воды туалет - унитаз"
+      switch.0xa4c13831e8c737c0:
+        friendly_name: "Выключатель хол. воды"
+        icon: mdi:toggle-switch
+      switch.0xa4c138382fb44ae0:
+        friendly_name: "Выключатель гор. воды"
+        icon: mdi:toggle-switch
+      sensor.0x00158d0006444f09_action:
+        friendly_name: "Кнопка в туалете"
+      sensor.0x00158d0006444f09_battery:
+        friendly_name: "Кнопка в туалете"
+        device_class: battery
+      sensor.0x00158d0006444f09_zigbee:
+        friendly_name: "Кнопка в туалете"
+        icon: mdi:zigbee
+      sensor.582d3460db86_battery:
+        friendly_name: "Движение туалет"
+        device_class: battery
+      sensor.582d3460db86_ble:
+        friendly_name: "Движение туалет"
+        icon: mdi:bluetooth
+      sensor.a4c1380aace4_battery:
+        friendly_name: "Датчик температуры туалет"
+        device_class: battery
+      sensor.a4c1380aace4_ble:
+        friendly_name: "Датчик температуры туалет"
+        icon: mdi:bluetooth
+      sensor.0x00158d000ad604da_humidity:
+        friendly_name: "Влажность туалет"
+        unit_of_measurement: "%"
+        device_class: humidity
+      sensor.0xa4c1380aace4195b_battery:
+        friendly_name: "Датчик температуры туалет"
+        device_class: battery
       sensor.0x00158d000ad604da_temperature:
         friendly_name: "Температура туалет"
         unit_of_measurement: "°C"
         device_class: temperature
         icon: mdi:temperature-celsius
-      sensor.0x00158d000ad604da_humidity:
-        friendly_name: "Влажность туалет"
-        unit_of_measurement: "%"
-        device_class: humidity
-        icon: mdi:water-percent
-      switch.sonoff_basic_tualet:
-        friendly_name: "Вытяжка туалет - Sonoff"
-        icon: mdi:fan
+      sensor.0x00158d000ad604da_battery:
+        friendly_name: "Датчик влажности туалет"
+        icon: mdi:battery
+        device_class: battery
       switch.tualet_vitajka_sonoff_basic_tualet:
         friendly_name: "Вытяжка туалет - Sonoff"
         icon: mdi:fan
@@ -443,23 +471,23 @@ toilet_setting:
           entity_id:
             - switch.tualet_vitajka_sonoff_basic_tualet
 
-    # - alias: Toilet-Send_Telegramm
-    #   id: Toilet-Send_Telegramm
-    #   initial_state: true
-    #   mode: single
-    #   triggers:
-    #     - trigger: calendar
-    #       entity_id: calendar.system_date
-    #       event: start
-    #       offset: "0:0:0"
-    #   conditions: []
-    #   actions:
-    #     - service: telegram_bot.send_message
-    #       data_template:
-    #         target: !secret chat_id_group
-    #         title: "{{ '\U00002705' }} *Показания счетчиков*"
-    #         message: >
-    #           🌴 Горячая вода   - {{(states('sensor.waterius_8931698_ch0')|round(2))}}
-    #           ❄️ Холодная вода  - {{(states('sensor.waterius_8931698_ch1')|round(2))}}
-    #         disable_web_page_preview: true
-    #         disable_notification: true
+    - alias: Toilet-Send_Telegramm
+      id: Toilet-Send_Telegramm
+      initial_state: true
+      mode: single
+      triggers:
+        - trigger: calendar
+          entity_id: calendar.nuzhnoe
+          event: start
+          offset: "0:0:0"
+      conditions: []
+      actions:
+        - action: telegram_bot.send_message
+          data:
+            entity_id:
+              - notify.maylie_opoveshchenie_ot_um_doma_1001785858034
+            title: "{{ '\U00002705' }} *Показания счетчиков*"
+            message: |-
+              🌴 Горячая вода   - {{(states('sensor.waterius_8931698_ch0')|round(2))}}
+              ❄️ Холодная вода  - {{(states('sensor.waterius_8931698_ch1')|round(2))}}
+            parse_mode: html

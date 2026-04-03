@@ -17,87 +17,66 @@ system_influxdb:
         - select
         - counter
       entity_globs:
-        - binary_sensor.signalizatsii*
-        - binary_sensor.*_door
-        - binary_sensor.*_motion
-        - binary_sensor.*_windows
-        - binary_sensor.*_occupancy
-        - binary_sensor.*_contact
-        - binary_sensor.*_gateway
-        - binary_sensor.*_condition
-        - binary_sensor.*_moisture
-        - sensor.signalizatsii*
-        - switch.signalizatsiia*
-        - lock.signalizatsiia*
-        - button.signalizatsiia*
-        - sensor.*_illuminance
-        - sensor.*_temperature
-        - sensor.*_humidity
-        - sensor.*_battery
-        - sensor.*_energy
-        - sensor.*_zigbee
-        - sensor.*_linkquality*
-        - sensor.*_last_seen*
-        - sensor.*_soil_moisture
-        - script.clean_living_*
-        - vacuum.*
-        - humidifier.*
-        - update.*
-        - sensor.*_voltage
-        - sensor.speedtest*
-        - sensor.*_virt
-        - sensor.miscale_basal*
-        - sensor.yandex_weather*
-        - sensor.*_action
-        - binary_sensor.sensor_motion*
-        - binary_sensor.cam510_*
-        - switch.cam510_*
-        - sensor.cam510_*
-        - binary_sensor.cam810_*
-        - switch.cam810_*
-        - sensor.cam810_*
-        - binary_sensor.ping*
-        - sensor.vpc_*
-        - sensor.galaxy_watch4_*
-        - sensor.memory*
-        - sensor.processor*
-        - sensor.home_assistant_core*
-        - sensor.memory_*
-        - sensor.disk_*
-        - sensor.system_monitor*
+        # - binary_sensor.*_door
+        # - binary_sensor.*_motion
+        # - binary_sensor.*_windows
+        # - binary_sensor.*_occupancy
+        # - binary_sensor.*_contact
+        # - binary_sensor.*_gateway
+        # - binary_sensor.*_condition
+        # - binary_sensor.*_moisture
+        # - sensor.*_illuminance
+        # - sensor.*_temperature
+        # - sensor.*_humidity
+        # - sensor.*_battery
+        # - sensor.*_energy
+        # - sensor.*_linkquality*
+        # - sensor.*_last_seen*
+        # - update.*
+        # - sensor.*_voltage
+        # - sensor.*_virt
+        # - sensor.*_action
+        # - binary_sensor.cam510_*
+        # - switch.cam510_*
+        # - sensor.cam510_*
+        # - binary_sensor.cam810_*
+        # - switch.cam810_*
+        # - sensor.cam810_*
+        # - sensor.memory_*
+        # - sensor.disk_*
+        # - sensor.system_monitor*
         - sensor.co2*
-        - sensor.tests_co2
         # - sensor.tualet_counter*
-      entities:
-        # - binary_sensor.rpi_power_status
-        # - sensor.0xa4c13800371f889b_energy_cost
-        # - sensor.maria_db_size
-        # - sensor.0xa4c13800371f889b_current
-        # - sensor.0xa4c13800371f889b_power
-        # - binary_sensor.internet_is_available
-        # - binary_sensor.router_rostelecom
-        # - binary_sensor.computer_pc
-        # - binary_sensor.router_home
-        # - binary_sensor.home_ass
-        # - binary_sensor.home_web
-        # - binary_sensor.homeass
-        # - binary_sensor.router
-        # - sensor.speedtest_download
-        # - sensor.speedtest_ping
-        # - sensor.speedtest_upload
-        # - person.mariya
-        # - sensor.sm_n985f_geocoded_location
-        # - sensor.hacs
-        # - sensor.ssl_cert_issued
-        # - sensor.ssl_expiry_cert
-        # - sensor.disk_use_percent
-        # - sensor.disk_free
-        # - sensor.processor_use_percent
-        # - sensor.memory_use_percent
-        # - sensor.kirill_scale
-        - sensor.kirill_weight
-        - sensor.download_109_194_160_230
-        - sensor.upload_109_194_160_230
-        # - sensor.prognoz_dozhdia_po_geo
-        # - counter.cold_water_counter
-        # - counter.hot_water_counter
+      # entities:
+      # - binary_sensor.rpi_power_status
+      # - sensor.0xa4c13800371f889b_energy_cost
+      # - sensor.maria_db_size
+      # - sensor.0xa4c13800371f889b_current
+      # - sensor.0xa4c13800371f889b_power
+      # - binary_sensor.internet_is_available
+      # - binary_sensor.router_rostelecom
+      # - binary_sensor.computer_pc
+      # - binary_sensor.router_home
+      # - binary_sensor.home_ass
+      # - binary_sensor.home_web
+      # - binary_sensor.homeass
+      # - binary_sensor.router
+      # - sensor.speedtest_download
+      # - sensor.speedtest_ping
+      # - sensor.speedtest_upload
+      # - person.mariya
+      # - sensor.sm_n985f_geocoded_location
+      # - sensor.hacs
+      # - sensor.ssl_cert_issued
+      # - sensor.ssl_expiry_cert
+      # - sensor.disk_use_percent
+      # - sensor.disk_free
+      # - sensor.processor_use_percent
+      # - sensor.memory_use_percent
+      # - sensor.kirill_scale
+      # - sensor.kirill_weight
+      # - sensor.download_109_194_160_230
+      # - sensor.upload_109_194_160_230
+      # - sensor.prognoz_dozhdia_po_geo
+      # - counter.cold_water_counter
+      # - counter.hot_water_counter

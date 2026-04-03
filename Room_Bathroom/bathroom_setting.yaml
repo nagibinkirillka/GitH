@@ -4,8 +4,19 @@ bathroom_setting:
       sensor.0x60a423fffee6ab1e_linkquality:
         friendly_name: "Выключатель уборная - связь до ZigBee"
         icon: mdi:signal
+      sensor.0x00158d000854a6d5_battery:
+        friendly_name: "Движение ванная"
+        device_class: battery
+      sensor.0x00158d000854a6d5_zigbee:
+        friendly_name: "Движение ванная"
+        icon: mdi:zigbee
       binary_sensor.vannaya_motion:
         friendly_name: "Движение ванная"
+        device_class: motion
+        icon: mdi:motion-sensor
+        occupancy_timeout: 180
+      binary_sensor.0x00158d000854a6d5_occupancy:
+        friendly_name: "Движение ванная - датчик"
         device_class: motion
         icon: mdi:motion-sensor
       switch.0x60a423fffee6ab1e_left:
@@ -22,33 +33,50 @@ bathroom_setting:
       sensor.0x00158d00067f1f5d_battery:
         friendly_name: "Ванная дверь"
         device_class: battery
+      sensor.0x00158d00067f1f5d_zigbee:
+        friendly_name: "Ванная дверь"
+        icon: mdi:zigbee
       binary_sensor.0x00158d0007f289ef_moisture:
         device_class: moisture
         friendly_name: "Датчик протечки воды ванная - Стиральная машинка"
       sensor.0x00158d0007f289ef_battery:
         device_class: battery
         friendly_name: "Датчик протечки воды ванная - Стиральная машинка"
+      sensor.0x00158d0007f289ef_zigbee:
+        icon: mdi:zigbee
+        friendly_name: "Датчик протечки воды ванная - Стиральная машинка"
+
       binary_sensor.0x00158d0008e0abbc_moisture:
         device_class: moisture
         friendly_name: "Датчик протечки воды ванная - Ванная"
       sensor.0x00158d0008e0abbc_battery:
         device_class: battery
         friendly_name: "Датчик протечки воды ванная - Ванная"
+      sensor.0x00158d0008e0abbc_zigbee:
+        icon: mdi:zigbee
+        friendly_name: "Датчик протечки воды ванная - Ванная"
       binary_sensor.0x00158d0008dfa549_moisture:
         device_class: moisture
         friendly_name: "Датчик протечки в кухне - Моечная машина"
+
       binary_sensor.0x00158d0008dfef37_moisture:
         device_class: moisture
         friendly_name: "Датчик протечки в туалете - Унитаз"
+
       binary_sensor.0x00158d0006fafd08_moisture:
         device_class: moisture
         friendly_name: "Датчик протечки в кухне - Мойка"
+
       binary_sensor.0x00158d0008e0d500_moisture:
         device_class: moisture
         friendly_name: "Датчик протечки воды ванная - шкаф"
       sensor.0x00158d0008e0d500_battery:
         device_class: battery
         friendly_name: "Датчик протечки воды ванная - шкаф"
+      sensor.0x00158d0008e0d500_zigbee:
+        icon: mdi:zigbee
+        friendly_name: "Датчик протечки воды ванная - шкаф"
+
       sensor.vannaya_temperature_virt:
         friendly_name: "Средняя температура в ванной"
         unit_of_measurement: "°C"
@@ -57,9 +85,16 @@ bathroom_setting:
         friendly_name: "Средняя влажность ванной"
         unit_of_measurement: "%"
         device_class: humidity
+      binary_sensor.0x00158d000854a6d5_motion:
+        friendly_name: "Движение ванная"
+        device_class: motion
+        icon: mdi:motion-sensor
+      sensor.0x00158d000854a6d5_illuminance:
+        friendly_name: "Освещение ванная"
       sensor.0x00158d000ad98b32_battery:
         device_class: battery
         friendly_name: "Датчик температуры ванная"
+
       sensor.0x00158d000ad98b32_humidity:
         friendly_name: "Средняя влажность ванной"
         unit_of_measurement: "%"
@@ -70,10 +105,6 @@ bathroom_setting:
         unit_of_measurement: "°C"
         device_class: temperature
         icon: mdi:temperature-celsius
-      binary_sensor.0x00158d000854a6d5_occupancy:
-        friendly_name: "Движение ванная - датчик"
-        device_class: motion
-        icon: mdi:motion-sensor
       switch.vannaya_switch:
         friendly_name: "Выключатель ванная"
         icon: mdi:lightbulb
@@ -187,3 +218,161 @@ bathroom_setting:
       action:
         - service: switch.turn_off
           entity_id: switch.vannaya_switch
+
+    - alias: notify-TG-water_ON
+      description: notify-TG-water_ON
+      initial_state: true
+      mode: single
+      trigger:
+        - platform: state
+          entity_id:
+            - binary_sensor.0x00158d0007f289ef_moisture
+            - binary_sensor.0x00158d0008e0abbc_moisture
+            - binary_sensor.0x00158d0006fafd08_moisture
+            - binary_sensor.0x00158d0008dfef37_moisture
+            - binary_sensor.0x00158d0008e0d500_moisture
+            - binary_sensor.0x00158d0008dfa549_moisture
+            - binary_sensor.0x00158d008b85d6fd_moisture
+          to: "on"
+      condition:
+        # - condition: time
+        #   after: "10:00:00"
+        #   before: "23:00:00"
+      action:
+        - action: telegram_bot.send_message
+          data:
+            entity_id:
+              - notify.maylie_opoveshchenie_ot_um_doma_1001785858034
+            title: "{{ '\U000026d4' }} *Системное оповещение*"
+            message: |
+              Внимание! Сработал датчик протечки в  {{ state_attr(trigger.entity_id, 'friendly_name') }}
+        - service: media_player.play_media
+          entity_id: group.yandex_stations
+          data:
+            media_content_id: |-
+              {% if is_state('binary_sensor.0x00158d0007f289ef_moisture', 'on') %} Внимание! Сработал датчик протечки в ванной - Стиральная машинка{% endif %} 
+              {% if is_state('binary_sensor.0x00158d0006fafd08_moisture', 'on') %} Внимание! Сработал датчик протечки в кухне - Мойка{% endif %} 
+              {% if is_state('binary_sensor.0x00158d0008e0abbc_moisture', 'on') %} Внимание! Сработал датчик протечки в ванной - Ванная{% endif %}     
+              {% if is_state('binary_sensor.0x00158d0008e0d500_moisture', 'on') %} Внимание! Сработал датчик протечки в ванной - Шкаф{% endif %}
+              {% if is_state('binary_sensor.0x00158d0008dfef37_moisture', 'on') %} Внимание! Сработал датчик протечки в туалете - Унитаз{% endif %}
+              {% if is_state('binary_sensor.0x00158d0008dfa549_moisture', 'on') %} Внимание! Сработал датчик протечки в кухне - Моечная машина{% endif %}
+              {% if is_state('binary_sensor.0x00158d008b85d6fd_moisture', 'on') %} Внимание! Сработал датчик протечки в кухне - Под посудомойкой{% endif %}
+            media_content_type: text
+            extra:
+              volume_level: 0.7
+        - delay: "00:00:03"
+        - service: media_player.play_media
+          entity_id: group.yandex_stations
+          data:
+            media_content_id: |-
+              {% if is_state('binary_sensor.0x00158d0007f289ef_moisture', 'on') %} Внимание! Сработал датчик протечки в ванной - Стиральная машинка{% endif %} 
+              {% if is_state('binary_sensor.0x00158d0006fafd08_moisture', 'on') %} Внимание! Сработал датчик протечки в кухне - Мойка{% endif %} 
+              {% if is_state('binary_sensor.0x00158d0008e0abbc_moisture', 'on') %} Внимание! Сработал датчик протечки в ванной - Ванная{% endif %}     
+              {% if is_state('binary_sensor.0x00158d0008e0d500_moisture', 'on') %} Внимание! Сработал датчик протечки в ванной - Шкаф{% endif %}
+              {% if is_state('binary_sensor.0x00158d0008dfef37_moisture', 'on') %} Внимание! Сработал датчик протечки в туалете - Унитаз{% endif %}
+              {% if is_state('binary_sensor.0x00158d0008dfa549_moisture', 'on') %} Внимание! Сработал датчик протечки в кухне - Моечная машина{% endif %}
+              {% if is_state('binary_sensor.0x00158d008b85d6fd_moisture', 'on') %} Внимание! Сработал датчик протечки в кухне - Под посудомойкой{% endif %}
+            media_content_type: text
+            extra:
+              volume_level: 0.7
+        - delay: "00:00:03"
+        - service: media_player.play_media
+          entity_id: group.yandex_stations
+          data:
+            media_content_id: |-
+              {% if is_state('binary_sensor.0x00158d0007f289ef_moisture', 'on') %} Внимание! Сработал датчик протечки в ванной - Стиральная машинка{% endif %} 
+              {% if is_state('binary_sensor.0x00158d0006fafd08_moisture', 'on') %} Внимание! Сработал датчик протечки в кухне - Мойка{% endif %} 
+              {% if is_state('binary_sensor.0x00158d0008e0abbc_moisture', 'on') %} Внимание! Сработал датчик протечки в ванной - Ванная{% endif %}     
+              {% if is_state('binary_sensor.0x00158d0008e0d500_moisture', 'on') %} Внимание! Сработал датчик протечки в ванной - Шкаф{% endif %}
+              {% if is_state('binary_sensor.0x00158d0008dfef37_moisture', 'on') %} Внимание! Сработал датчик протечки в туалете - Унитаз{% endif %}
+              {% if is_state('binary_sensor.0x00158d0008dfa549_moisture', 'on') %} Внимание! Сработал датчик протечки в кухне - Моечная машина{% endif %}
+              {% if is_state('binary_sensor.0x00158d008b85d6fd_moisture', 'on') %} Внимание! Сработал датчик протечки в кухне - Под посудомойкой{% endif %}
+            media_content_type: text
+            extra:
+              volume_level: 0.7
+
+    - alias: notify-TG-water_ON_Off_aktuator
+      description: notify-TG-water_ON_Off_aktuator
+      initial_state: true
+      mode: single
+      trigger:
+        - platform: state
+          entity_id:
+            - binary_sensor.0x00158d0007f289ef_moisture
+            - binary_sensor.0x00158d0008e0abbc_moisture
+            - binary_sensor.0x00158d0006fafd08_moisture
+            - binary_sensor.0x00158d0008dfef37_moisture
+            - binary_sensor.0x00158d0008e0d500_moisture
+            - binary_sensor.0x00158d0008dfa549_moisture
+            - binary_sensor.0x00158d008b85d6fd_moisture
+          to: "on"
+      condition:
+        # - condition: time
+        #   after: "10:00:00"
+        #   before: "23:00:00"
+      action:
+        - service: switch.turn_off
+          entity_id:
+            - switch.tualet_vit_water_hot
+        - delay: "00:00:01"
+        - service: switch.turn_off
+          entity_id:
+            - switch.tualet_vit_water_cold
+        - delay: "00:00:06"
+        - action: telegram_bot.send_message
+          data:
+            entity_id:
+              - notify.maylie_opoveshchenie_ot_um_doma_1001785858034
+            title: "{{ '\U000026d4' }} *Системное оповещение*"
+            message: |
+              Внимание! Вода была отключена. 
+              Холодная вода: {{ states('sensor.tualet_aktuator_water_cold') }}. 
+              Горячая вода: {{ states('sensor.tualet_aktuator_water_hot') }}.
+            parse_mode: html
+
+    - alias: notify-TG-water_ON_aktuator
+      description: notify-TG-water_ON_Off_aktuator
+      initial_state: true
+      mode: single
+      trigger:
+        - platform: state
+          entity_id:
+            - switch.tualet_vit_water_hot
+            - switch.tualet_vit_water_cold
+          from: "off"
+          to: "on"
+      condition:
+        - condition: state
+          entity_id: switch.tualet_vit_water_hot
+          state: "off"
+        - condition: state
+          entity_id: switch.tualet_vit_water_cold
+          state: "off"
+      action:
+        - action: telegram_bot.send_message
+          data:
+            entity_id:
+              - notify.maylie_opoveshchenie_ot_um_doma_1001785858034
+            title: "{{ '\U000026d4' }} *Системное оповещение*"
+            message: |
+              Внимание! Включение воды выполнено. 
+              {{ states('sensor.tualet_aktuator_water_cold') }}. 
+              {{ states('sensor.tualet_aktuator_water_hot') }}.
+            parse_mode: html
+
+    - alias: Ya_Int_bathroom_Dush_Off
+      initial_state: true
+      mode: single
+      trigger:
+        - platform: state
+          entity_id:
+            - binary_sensor.vannaya_door
+          from: "on"
+          for: 00:03:00
+      action:
+        - service: automation.turn_on
+          target:
+            entity_id:
+              - automation.vannaya_turn_off_light_after_3_min_when_switch_on
+              - automation.vannaya_turn_off_light_by_motion_sensor
+              - automation.vannaya_turn_on_light_by_motion_sensor

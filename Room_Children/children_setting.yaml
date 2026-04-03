@@ -1,6 +1,17 @@
 children_setting:
   homeassistant:
     customize:
+      climate.detskaya_ac:
+        friendly_name: "Кондиционер - детская"
+      media_player.lg_webos_tv_uk6300plb:
+        friendly_name: "Телевизор LG в детской"
+        device_class: tv
+        icon: mdi:television-classic
+      media_player.playstation_4:
+        friendly_name: "Playstation"
+        device_class: tv
+        icon: mdi:sony-playstation
+
       switch.0x60a423fffeb046fa_left:
         friendly_name: "Выключатель детская - большой свет"
         icon: mdi:lightbulb
@@ -13,13 +24,42 @@ children_setting:
       sensor.0x00158d00068a0604_battery:
         friendly_name: "Кондиционер детская"
         device_class: battery
+      sensor.0x00158d00068a0604_zigbee:
+        friendly_name: "Кондиционер детская"
+        icon: mdi:zigbee
       binary_sensor.0x00158d00067f0d82_contact:
         friendly_name: "Окно детская"
         device_class: window
         icon: mdi:window-open-variant
+      humidifier.uvlazhnitel:
+        friendly_name: "Кузя"
+        device_class: humidifier
+        icon: mdi:air-humidifier
+      script.clean_living_detskaya:
+        friendly_name: уборка в детской
+        icon: mdi:robot-vacuum
+      switch.0xa4c13865ff117cba:
+        friendly_name: "Розетка в детской"
+        icon: mdi:power-socket-eu
+      sensor.0xa4c13865ff117cba_energy:
+        friendly_name: "Розетка в детской энергия"
+        icon: mdi:lightning-bolt-outline
       sensor.0x00158d00067f0d82_battery:
         friendly_name: "Окно детская"
         device_class: battery
+      binary_sensor.0x00124b0023584a17_battery_low:
+        friendly_name: "Окно детская - батарейки датчика"
+        icon: mdi:battery
+        device_class: battery
+      sensor.0x60a423fffeb54252_linkquality:
+        friendly_name: "Выключатель детская - связь до ZigBee"
+        icon: mdi:signal
+      sensor.0x00158d00068a0604_linkquality:
+        friendly_name: "Кондиционер детская - связь до ZigBee"
+        icon: mdi:signal
+      sensor.0x00124b0023584a17_linkquality:
+        friendly_name: "Окно детская - связь до ZigBee"
+        icon: mdi:signal
       binary_sensor.sensor_motion_detskaya:
         friendly_name: "Движение детская"
         device_class: motion
@@ -45,28 +85,55 @@ children_setting:
         unit_of_measurement: "%"
         device_class: humidity
         icon: mdi:water-percent
-      humidifier.uvlazhnitel:
-        friendly_name: "Кузя"
-        device_class: humidifier
-        icon: mdi:air-humidifier
-      sensor.0xa4c138c42156a83b_temperature:
-        friendly_name: "Датчик температуры детская"
-        unit_of_measurement: "°C"
-        device_class: temperature
-        icon: mdi:temperature-celsius
-      sensor.0xa4c138c42156a83b_humidity:
-        friendly_name: "Датчик влажности детская"
-        unit_of_measurement: "%"
-        device_class: humidity
-        icon: mdi:water-percent
-      sensor.detskaya_temperature:
-        friendly_name: "Температура детская"
-        unit_of_measurement: "°C"
-        device_class: temperature
       sensor.detskaya_humidity:
         friendly_name: "Влажность детская"
         unit_of_measurement: "%"
         device_class: humidity
+        icon: mdi:water-percent
+      sensor.a4c138c42156_battery:
+        friendly_name: "Датчик температуры в детской"
+        device_class: battery
+      sensor.a4c138c42156_ble:
+        friendly_name: "Датчик температуры в детской"
+        icon: mdi:bluetooth
+      sensor.a4c138c42156_humidity:
+        friendly_name: "Средняя влажность детская"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.a4c138c42156_temperature:
+        friendly_name: "Средняя температура детская"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      switch.0xa4c1389ac97dd356:
+        friendly_name: "Кондиционер в детской"
+        icon: mdi:power-socket-eu
+      sensor.0xa4c1389ac97dd356_energy:
+        friendly_name: "Кондиционер в детской энергия"
+        icon: mdi:lightning-bolt-outline
+      switch.0xa4c1380b215141b6:
+        friendly_name: "Розетка кондиционер детская"
+        icon: mdi:power-socket-eu
+      sensor.0xa4c1380b215141b6_energy:
+        friendly_name: "Розетка кондиционер детская энергия"
+        icon: mdi:lightning-bolt-outline
+      switch.0xa4c138c8b951870d:
+        friendly_name: "Розетка детская шлюз"
+        icon: mdi:power-socket-eu
+      sensor.0xa4c138c8b951870d_energy:
+        friendly_name: "Розетка детская шлюз энергия"
+        icon: mdi:lightning-bolt-outline
+      media_player.yandex_station_m007e85001yzgb:
+        friendly_name: "Яндекс станция в детской"
+
+      binary_sensor.yandex_station_m007e85001yzgb_assumed_state:
+        friendly_name: "Яндекс станция в детской"
+        icon: mdi:cloud-alert
+      sensor.detskaya_temperature:
+        friendly_name: "Температура детская"
+        unit_of_measurement: "°C"
+        device_class: temperature
       switch.detskaya_switch:
         friendly_name: "Выключатель детская"
         icon: mdi:lightbulb

@@ -1,9 +1,48 @@
 bedroom_setting:
   homeassistant:
     customize:
+      sensor.0x00158d00068a06f5_battery:
+        friendly_name: "Кондиционер спальня"
+        device_class: battery
+      sensor.0x00158d00068a06f5_zigbee:
+        friendly_name: "Кондиционер спальня"
+        icon: mdi:zigbee
+      switch.0xa4c13800371f889b:
+        friendly_name: "Розетка в спальной"
+        icon: mdi:power-socket-eu
+      sensor.0xa4c13800371f889b_energy:
+        friendly_name: "Розетка в спальной энергия"
+        icon: mdi:lightning-bolt-outline
+      switch.0xa4c13883ea7103db:
+        friendly_name: "Кондиционер в спальной"
+        icon: mdi:power-socket-eu
+      sensor.0xa4c13883ea7103db_energy:
+        friendly_name: "Кондиционер в спальной энергия"
+        icon: mdi:lightning-bolt-outline
+      climate.spalnya_ac:
+        friendly_name: "Кондиционер - спальня"
+      media_player.lg_webos_tv_un81006lb:
+        friendly_name: "Телевизор LG в спальне"
+        device_class: tv
+        icon: mdi:television-classic
+      media_player.yandex_station_r10f2y0001a3gg:
+        friendly_name: "Яндекс станция в спальной"
+      binary_sensor.yandex_station_r10f2y0001a3gg_assumed_state:
+        friendly_name: "Яндекс станция в спальной"
+      binary_sensor.0x00158d00068a06f5_contact:
+        friendly_name: "Кондиционер спальня - контакт"
+        device_class: window
+        icon: mdi:air-conditioner
       switch.0x847127fffea0f2ab:
         friendly_name: "Выключатель спальня"
         icon: mdi:lightbulb
+      script.clean_living_spalnya:
+        friendly_name: уборка в спальной
+        icon: mdi:robot-vacuum
+      humidifier.uvl_spalnia:
+        friendly_name: "Афоня"
+        device_class: humidifier
+        icon: mdi:air-humidifier
       binary_sensor.spalnya_motion:
         friendly_name: "Движение спальня"
         device_class: motion
@@ -26,6 +65,17 @@ bedroom_setting:
         friendly_name: "Средняя влажность в спальной"
         unit_of_measurement: "%"
         device_class: humidity
+      switch.0xa4c13897280a0fc3:
+        friendly_name: "Пилот в спальной"
+        icon: mdi:power-socket-eu
+      sensor.spalnya_humidity:
+        friendly_name: "Влажность спальня"
+        unit_of_measurement: "%"
+        device_class: humidity
+      sensor.spalnya_temperature:
+        friendly_name: "Температура спальня"
+        unit_of_measurement: "°C"
+        device_class: temperature
       sensor.0x00158d000ad98aad_humidity:
         friendly_name: "Средняя влажность в спальной"
         unit_of_measurement: "%"
@@ -37,22 +87,6 @@ bedroom_setting:
       sensor.0x00158d000ad98aad_battery:
         friendly_name: "Датчик влажности спальная"
         device_class: battery
-      humidifier.uvl_spalnia:
-        friendly_name: "Афоня"
-        device_class: humidifier
-        icon: mdi:air-humidifier
-      binary_sensor.0x00158d00068a06f5_contact:
-        friendly_name: "Кондиционер спальня - контакт"
-        device_class: window
-        icon: mdi:air-conditioner
-      sensor.spalnya_temperature:
-        friendly_name: "Температура спальня"
-        unit_of_measurement: "°C"
-        device_class: temperature
-      sensor.spalnya_humidity:
-        friendly_name: "Влажность спальня"
-        unit_of_measurement: "%"
-        device_class: humidity
       switch.spalnya_switch:
         friendly_name: "Выключатель спальня"
         icon: mdi:lightbulb

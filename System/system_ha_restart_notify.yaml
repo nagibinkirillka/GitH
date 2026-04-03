@@ -41,7 +41,7 @@ system_ha_restart_notify:
               ❌ Недоступно устройств: {{ unavailable_count }}
 
               {{ unavailable_list }}
-            parse_mode: markdownv2
+            parse_mode: html
             disable_web_page_preview: true
 
         # - delay: "00:00:10"
@@ -58,3 +58,49 @@ system_ha_restart_notify:
         #     media_content_type: text
         #     extra:
         #       volume_level: 0.5
+
+    - alias: Notify_Desktop_User_Login
+      description: "Оповещение о входе пользователя на Desktop"
+      initial_state: true
+      mode: single
+      trigger:
+        - platform: state
+          entity_id: sensor.desktop_k9lquu9_satellite_loggeduser
+      condition:
+        - condition: template
+          value_template: "{{ trigger.to_state.state != 'unknown' and trigger.to_state.state != '' }}"
+      action:
+        - action: telegram_bot.send_message
+          data:
+            entity_id:
+              - notify.maylie_kirill_208710873
+            title: "{{ '\U0001F4BB' }} *Оповещение о входе*"
+            message: |
+              ✅ **Пользователь вошёл на Desktop**
+
+              👤 Имя пользователя: {{ trigger.to_state.state }}
+              📅 Дата: {{ now().strftime('%d.%m.%Y') }}
+              ⏱ Время: {{ now().strftime('%H:%M') }}
+            parse_mode: html
+
+    - alias: Notify_Desktop_User_Logout
+      description: "Оповещение о выходе пользователя с Desktop"
+      initial_state: true
+      mode: single
+      trigger:
+        - platform: state
+          entity_id: sensor.desktop_k9lquu9_satellite_loggeduser
+          to: ""
+      action:
+        - action: telegram_bot.send_message
+          data:
+            entity_id:
+              - notify.maylie_kirill_208710873
+            title: "{{ '\U0001F4BB' }} *Оповещение о выходе*"
+            message: |
+              ❌ **Пользователь вышел с Desktop**
+
+              👤 Имя пользователя: {{ trigger.from_state.state }}
+              📅 Дата: {{ now().strftime('%d.%m.%Y') }}
+              ⏱ Время: {{ now().strftime('%H:%M') }}
+            parse_mode: html

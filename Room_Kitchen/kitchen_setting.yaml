@@ -1,22 +1,65 @@
 kitchen_setting:
   homeassistant:
     customize:
-      binary_sensor.0x00158d0007059e6f_contact:
+      switch.r4s01_kettle_boil:
+        friendly_name: "Чайник"
+        device_class: switch
+        icon: mdi:kettle
+      switch.r4s01_kettle_heat:
+        friendly_name: "Чайник подогрев"
+        device_class: switch
+        icon: mdi:kettle
+      climate.r4s01_kettle_temp:
+        friendly_name: "Чайник температура"
+        device_class: switch
+        icon: mdi:kettle
+      binary_sensor.0x00124b002342ea09_contact:
         friendly_name: "Окно кухня"
         device_class: window
         icon: mdi:window-open-variant
-      binary_sensor.dced838ebf39_occupancy:
+      sensor.0x00124b002342ea09_zigbee:
+        friendly_name: "Окно кухня - связь до ZigBee"
+        icon: mdi:signal
+      sensor.0x00124b002342ea09_battery:
+        friendly_name: "Окно кухня - батарейки датчика"
+        icon: mdi:battery
+        device_class: battery
+      binary_sensor.0x00124b0022ec0928_occupancy:
         friendly_name: "Движения кухня - движение"
-        device_class: motion
         icon: mdi:motion-sensor
+        device_class: motion
+      sensor.0x00124b0022ec0928_battery:
+        friendly_name: "Движения кухня - батарейки датчика"
+        icon: mdi:battery
+        device_class: battery
+      sensor.0x00124b0022ec0928_last_seen:
+        friendly_name: "Последние данные - обновление датчика"
+        icon: mdi:clock
+      sensor.0x00124b0022ec0928_linkquality:
+        friendly_name: "Движения кухня - связь до ZigBee"
+        icon: mdi:signal
+      binary_sensor.yandex_station_ff98f0292dedabbd40dc35d9_assumed_state:
+        friendly_name: "Яндекс станция в кухне"
+        icon: mdi:cloud-alert
+      media_player.yandex_station_ff98f0292dedabbd40dc35d9:
+        friendly_name: "Яндекс станция в кухне"
       switch.0x60a423fffee66abc:
         friendly_name: "Выключатель кухня"
         icon: mdi:lightbulb
+      sensor.0x60a423fffee66abc_linkquality:
+        friendly_name: "Выключатель кухня - связь до ZigBee"
+        icon: mdi:signal
+      script.clean_living_kuhnya:
+        friendly_name: уборка в кухне
+        icon: mdi:robot-vacuum
       binary_sensor.0x00158d0006fafd08_moisture:
         device_class: moisture
         friendly_name: Датчик протечки воды кухня - мойка
       sensor.0x00158d0006fafd08_battery:
         device_class: battery
+        friendly_name: Датчик протечки воды кухня - мойка
+      sensor.0x00158d0006fafd08_zigbee:
+        icon: mdi:zigbee
         friendly_name: Датчик протечки воды кухня - мойка
       binary_sensor.0x00158d0008dfa549_moisture:
         device_class: moisture
@@ -24,6 +67,20 @@ kitchen_setting:
       sensor.0x00158d0008dfa549_battery:
         device_class: battery
         friendly_name: Датчик протечки воды кухня - стиралка
+      sensor.0x00158d0008dfa549_zigbee:
+        friendly_name: Датчик протечки воды кухня - стиралка
+        icon: mdi:zigbee
+      binary_sensor.0x00158d008b85d6fd_moisture:
+        device_class: moisture
+        friendly_name: Датчик протечки воды кухня - В посудомойке
+      binary_sensor.sensor_motion_kuhnya:
+        friendly_name: "Движение кухня"
+        device_class: motion
+        icon: mdi:motion-sensor
+      binary_sensor.kuhnya_motion_mqtt:
+        friendly_name: "Движение кухня"
+        device_class: motion
+        icon: mdi:motion-sensor
       binary_sensor.kuhnya_motion:
         friendly_name: "Движение кухня"
         device_class: motion
@@ -36,6 +93,25 @@ kitchen_setting:
         friendly_name: "Окно в кухне"
         device_class: window
         icon: mdi:window-open-variant
+      switch.kuhnya_vitajka_relay:
+        friendly_name: "Вытяжка кухня"
+        icon: mdi:fan
+      switch.kuhnya_switch_relay:
+        friendly_name: "Включатель подсветки"
+        device_class: switch
+        icon: mdi:toggle-switch
+      sensor.0x00158d000883972c_battery:
+        friendly_name: "Движение кухня"
+        device_class: battery
+      sensor.0x00158d000883972c_zigbee:
+        friendly_name: "Движение кухня"
+        icon: mdi:zigbee
+      sensor.0x00158d000ad988bf_battery:
+        friendly_name: "Датчик температуры в кухне"
+        device_class: battery
+      #sensor.a4c1385ce2a6_ble:
+      #  friendly_name: "Датчик температуры в кухне"
+      #  icon: mdi:bluetooth
       sensor.kuhnya_humidity_virt:
         friendly_name: "Средняя влажность кухня"
         unit_of_measurement: "%"
@@ -46,9 +122,16 @@ kitchen_setting:
         unit_of_measurement: "°C"
         device_class: temperature
         icon: mdi:temperature-celsius
-      sensor.0x00158d000ad988bf_battery:
-        friendly_name: "Датчик температуры в кухне"
-        device_class: battery
+      sensor.kuhnya_humidity:
+        friendly_name: "Средняя влажность кухня"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.kuhnya_temperature:
+        friendly_name: "Средняя температура кухня"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
       sensor.0x00158d000ad988bf_humidity:
         friendly_name: "Средняя влажность кухня"
         unit_of_measurement: "%"

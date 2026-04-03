@@ -1,21 +1,42 @@
 koridor_setting:
   homeassistant:
     customize:
+      sensor.0x00124b00226ce9d1_linkquality:
+        friendly_name: "Входная дверь - связь до ZigBee"
+        icon: mdi:signal
+      sensor.0x60a423fffe6c9135_linkquality:
+        friendly_name: "Выключатель коридор - связь до ZigBee"
+        icon: mdi:signal
+      binary_sensor.0x00124b00226ce9d1_battery_low:
+        friendly_name: "Входная дверь - батарейки датчика"
+        icon: mdi:battery
+        device_class: battery
+      sensor.0x00158d00072b8cc8_battery:
+        friendly_name: "Входная дверь - батарейка датчика"
+        icon: mdi:battery
+        device_class: battery
+      light.fastled_ws2812b_koridor:
+        friendly_name: "Светодиодная лента в коридоре"
+      light.fastled_ws2812b_detskaya:
+        friendly_name: "Светодиодная лента у детской"
+      light.led_matrix:
+        friendly_name: "Часы в коридоре"
       binary_sensor.0x00158d00072b8cc8_contact:
         friendly_name: "Входная дверь"
         device_class: door
-      sensor.0x00158d00072b8cc8_battery:
-        friendly_name: "Входная дверь - батарейка датчика"
-        device_class: battery
       sensor.0x00158d00072b8cc8_zigbee:
-        friendly_name: "Входная дверь - связь ZigBee"
-        icon: mdi:zigbee
+        friendly_name: "Входная дверь"
+        device_class: door
       switch.0x60a423fffe6c9135:
         friendly_name: "Выключатель коридор - свет"
         icon: mdi:lightbulb
-      sensor.0x60a423fffe6c9135_linkquality:
-        friendly_name: "Выключатель коридор - связь ZigBee"
-        icon: mdi:signal
+      script.clean_living_koridor:
+        friendly_name: уборка в коридоре
+        icon: mdi:robot-vacuum
+      binary_sensor.sensor_motion_koridor:
+        friendly_name: "Движение коридор"
+        device_class: motion
+        icon: mdi:motion-sensor
       binary_sensor.koridor_motion:
         friendly_name: "Движение коридор"
         device_class: motion
@@ -38,16 +59,6 @@ koridor_setting:
         unit_of_measurement: "%"
         device_class: humidity
         icon: mdi:water-percent
-      sensor.koridor_temperature:
-        friendly_name: "Температура коридор"
-        unit_of_measurement: "°C"
-        device_class: temperature
-        icon: mdi:temperature-celsius
-      sensor.koridor_humidity:
-        friendly_name: "Влажность коридор"
-        unit_of_measurement: "%"
-        device_class: humidity
-        icon: mdi:water-percent
       sensor.0x00158d0006e3d63e_action:
         friendly_name: "Звонок в коридоре"
       sensor.0x00158d0006e3d63e_battery:
@@ -56,23 +67,45 @@ koridor_setting:
       sensor.0x00158d0006e3d63e_zigbee:
         friendly_name: "Звонок в коридоре"
         icon: mdi:zigbee
-      sensor.0xa4c13867a08fb69c_temperature:
-        friendly_name: "Датчик температуры коридор"
-        unit_of_measurement: "°C"
-        device_class: temperature
-        icon: mdi:temperature-celsius
-      sensor.0xa4c13867a08fb69c_humidity:
-        friendly_name: "Датчик влажности коридор"
-        unit_of_measurement: "%"
-        device_class: humidity
-        icon: mdi:water-percent
       sensor.a4c13867a08f_battery:
         friendly_name: "Датчик температуры коридор"
         device_class: battery
-      light.led_koridor_ws2812b:
-        friendly_name: "Светодиодная лента в коридоре"
+      sensor.a4c13867a08f_ble:
+        friendly_name: "Датчик температуры коридор"
+        icon: mdi:bluetooth
+      sensor.0xa4c13867a08fb69c_humidity:
+        friendly_name: "Средняя влажность коридора"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.a4c13867a08f_temperature:
+        friendly_name: "Средняя температура коридора"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      switch.0xa4c13827e01d93d4:
+        friendly_name: "Розетка коридор комера"
+        icon: mdi:power-socket-eu
+      sensor.0xa4c13827e01d93d4_energy:
+        friendly_name: "Розетка коридор комера энергия"
+        icon: mdi:lightning-bolt-outline
       media_player.yandex_station_ff98f029da2ccfe96d59979c:
         friendly_name: "Яндекс станция в коридоре"
+      binary_sensor.yandex_station_ff98f029da2ccfe96d59979c_assumed_state:
+        friendly_name: "Яндекс станция в коридоре"
+        icon: mdi:cloud-alert
+      sensor.koridor_humidity:
+        friendly_name: "Влажность коридор"
+        unit_of_measurement: "%"
+        device_class: humidity
+        icon: mdi:water-percent
+      sensor.koridor_temperature:
+        friendly_name: "Температура коридор"
+        unit_of_measurement: "°C"
+        device_class: temperature
+        icon: mdi:temperature-celsius
+      light.led_koridor_ws2812b:
+        friendly_name: "Светодиодная лента в коридоре"
       switch.koridor_switch:
         friendly_name: "Выключатель коридор"
         icon: mdi:lightbulb
@@ -173,7 +206,7 @@ koridor_setting:
       action:
         - service: light.turn_on
           entity_id:
-            - light.led_koridor_ws2812b
+            - light.led_koridor_ws2812_koridor
           data_template:
             brightness_pct: 11
             rgb_color: [255, 255, 255]
@@ -188,7 +221,7 @@ koridor_setting:
       action:
         - service: light.turn_on
           target:
-            entity_id: light.led_koridor_ws2812b
+            entity_id: light.led_koridor_ws2812_koridor
           data_template:
             brightness_pct: 11
             rgb_color: [255, 255, 255]
@@ -204,6 +237,6 @@ koridor_setting:
       action:
         - service: light.turn_off
           entity_id:
-            - light.led_koridor_ws2812b
+            - light.led_koridor_ws2812_koridor
           data:
             transition: 5

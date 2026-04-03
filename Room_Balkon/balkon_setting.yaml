@@ -8,12 +8,24 @@ balkon_setting:
       sensor.0x00124b0023a4deca_linkquality:
         friendly_name: "Окно балкон - связь до ZigBee"
         icon: mdi:signal
+      switch.pc01:
+        friendly_name: Компьютер
+        device_class: plug
+        icon: mdi:desktop-classic
       switch.lodjiya_sw_relay:
         friendly_name: "Выключатель балкон"
         icon: mdi:lightbulb
       binary_sensor.balkon_windows:
         friendly_name: "Окно на балконе"
         device_class: window
+      sensor.0x00158d000799a354_action:
+        friendly_name: Беспроводной Куб
+      sensor.0x00158d000799a354_battery:
+        device_class: battery
+        friendly_name: Беспроводной Куб
+      sensor.0x00158d000799a354_zigbee:
+        friendly_name: Беспроводной Куб
+        icon: mdi:zigbee
       sensor.0x00158d00070846f9_battery:
         friendly_name: "Окно балкон"
         device_class: battery

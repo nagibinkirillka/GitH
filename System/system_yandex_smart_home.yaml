@@ -15,7 +15,9 @@ system_yandex_smart_home:
         - switch.kuhnya_vitajka_kuhnya_vitajka_relay
         - sensor.waterius_8931698_ch1
         - sensor.waterius_8931698_ch0
-        # - cover.0xa4c138130a392f5a
+        - cover.0xa4c138130a392f5a
+        - light.led_koridor_ws2812_koridor
+        - light.led_kuhnja_ws2812_kyhnya
     entity_config:
       switch.detskaya_r_switch:
         name: "Свет детская малый"
@@ -67,3 +69,16 @@ system_yandex_smart_home:
       sensor.waterius_8931698_ch1:
         name: "Счетчик холодной воды"
         room: Туалет
+      cover.0xa4c138130a392f5a:
+        name: "Шторы спальня"
+        room: спальня
+        type: devices.types.openable
+        state_unknown: true
+      light.led_kuhnja_ws2812_kyhnya:
+        name: "Лента кухня"
+        room: Кухня
+        type: devices.types.light.strip
+      light.led_koridor_ws2812_koridor:
+        name: "Лента коридор"
+        room: Прихожая
+        type: devices.types.light.strip
