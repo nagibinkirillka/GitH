@@ -7,12 +7,19 @@ system_ha_restart_notify:
         - platform: homeassistant
           event: start
       action:
+        - delay: "00:00:30"
         - variables:
-            restart_time: "{{ (now() - states('sensor.uptime')).total_seconds() | int(default=0) }}"
+            restart_time: >
+              {% set uptime_ts = states('sensor.uptime') %}
+              {% if uptime_ts not in ['unknown', 'unavailable', 'none'] %}
+                {{ (now() - as_datetime(uptime_ts)).total_seconds() | int(default=0) }}
+              {% else %}
+                0
+              {% endif %}
             unavailable_count: >
               {% set ns = namespace(count=0) %}
               {% for entity in states %}
-                {% if entity.state == 'unavailable' or entity.state == 'unknown' %}
+                {% if entity.state in ['unavailable', 'unknown'] %}
                   {% set ns.count = ns.count + 1 %}
                 {% endif %}
               {% endfor %}
@@ -20,11 +27,12 @@ system_ha_restart_notify:
             unavailable_list: >
               {% set ns = namespace(list='') %}
               {% for entity in states %}
-                {% if entity.state == 'unavailable' or entity.state == 'unknown' %}
-                  {% set ns.list = ns.list + '• ' + entity.entity_id + '\n' %}
+                {% if entity.state in ['unavailable', 'unknown'] %}
+                  {% set name = state_attr(entity.entity_id, 'friendly_name') %}
+                  {% set ns.list = ns.list + '• ' + (name if name else entity.entity_id) + '\n' %}
                 {% endif %}
               {% endfor %}
-              {{ ns.list if ns.list else 'Все устройства доступны' }}
+              {{ ns.list if ns.list else '✅ Все устройства доступны' }}
         - action: telegram_bot.send_message
           data:
             entity_id:
@@ -36,12 +44,12 @@ system_ha_restart_notify:
               📅 Дата: {{ now().strftime('%d.%m.%Y') }}
               ⏱ Время: {{ now().strftime('%H:%M') }}
 
-              🔌 Время простоя: {{ restart_time }} сек
+              🔌 Время простоя: ~{{ (restart_time / 60) | int }} мин
 
               ❌ Недоступно устройств: {{ unavailable_count }}
 
               {{ unavailable_list }}
-            parse_mode: html
+            parse_mode: markdown
             disable_web_page_preview: true
 
         # - delay: "00:00:10"
@@ -91,6 +99,12 @@ system_ha_restart_notify:
         - platform: state
           entity_id: sensor.desktop_k9lquu9_satellite_loggeduser
           to: ""
+        - platform: state
+          entity_id: sensor.desktop_k9lquu9_satellite_loggeduser
+          to: "unknown"
+      condition:
+        - condition: template
+          value_template: "{{ trigger.from_state.state not in ['unknown', 'unavailable', ''] }}"
       action:
         - action: telegram_bot.send_message
           data:

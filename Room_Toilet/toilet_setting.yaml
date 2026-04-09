@@ -81,14 +81,14 @@ toilet_setting:
         friendly_name: "Датчик температуры туалет"
         icon: mdi:bluetooth
       sensor.0x00158d000ad604da_humidity:
-        friendly_name: "Влажность туалет"
+        friendly_name: "Средняя влажность туалет"
         unit_of_measurement: "%"
         device_class: humidity
       sensor.0xa4c1380aace4195b_battery:
         friendly_name: "Датчик температуры туалет"
         device_class: battery
       sensor.0x00158d000ad604da_temperature:
-        friendly_name: "Температура туалет"
+        friendly_name: "Средняя температура в туалете"
         unit_of_measurement: "°C"
         device_class: temperature
         icon: mdi:temperature-celsius
@@ -491,3 +491,25 @@ toilet_setting:
               🌴 Горячая вода   - {{(states('sensor.waterius_8931698_ch0')|round(2))}}
               ❄️ Холодная вода  - {{(states('sensor.waterius_8931698_ch1')|round(2))}}
             parse_mode: html
+
+    - alias: Auto_Toilet_Light_Night
+      trigger:
+        - platform: time
+          at: "23:00:00"
+      condition:
+        - condition: time
+          after: "23:00:00"
+          before: "08:00:00"
+      action:
+        - service: light.turn_on
+          entity_id: light.2c195c9ba56f_light # Светильник в туалете
+          data:
+            brightness_pct: 10
+
+    - alias: Auto_Toilet_Light_Off_Morning
+      trigger:
+        - platform: time
+          at: "08:00:00"
+      action:
+        - service: light.turn_off
+          entity_id: light.2c195c9ba56f_light # Светильник в туалете

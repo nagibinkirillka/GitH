@@ -7,6 +7,10 @@ balkon_ya_int:
       Выключи свет на балконе:
         extra_phrases:
           - Балкон свет выключить
+      Умка:
+        extra_phrases:
+          - Дай посмотреть умке
+          - Дай собачке посмотреть в окно
 
   automation:
     - alias: Ya_Int_balkon_Light_On
@@ -30,3 +34,13 @@ balkon_ya_int:
         - service: switch.turn_off
           entity_id:
             - switch.lodjiya_sw_lodjiya_sw_relay
+
+    - alias: Ya_Int_balkon_Cover_Open
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Умка
+      action:
+        - service: script.turn_on
+          entity_id: script.balkon_cover_35

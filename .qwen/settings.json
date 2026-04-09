@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "home-assistant": {
+      "url": "http://192.168.10.150:9583/private_VObDQKwk3OTWiqqxTn0tAg",
+      "timeout": 30000,
+      "trust": true,
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIwNTM1NTBiYjdiOGE0ZjczODNlOTFlMDZlOTdhOGU3YyIsImlhdCI6MTc3NTU4NTc5NywiZXhwIjoyMDkwOTQ1Nzk3fQ.fPyNByqM5LEhGy7YZHfdqprUp8vaCkgJc8uB1sCfGPw"
+    }
+  },
+  "homeAssistant": {
+    "url": "http://192.168.10.150:8123",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIwNTM1NTBiYjdiOGE0ZjczODNlOTFlMDZlOTdhOGU3YyIsImlhdCI6MTc3NTU4NTc5NywiZXhwIjoyMDkwOTQ1Nzk3fQ.fPyNByqM5LEhGy7YZHfdqprUp8vaCkgJc8uB1sCfGPw"
+  },
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(www.home-assistant.io)",
+      "WebFetch(www.stmcp.com)",
+      "WebFetch(github.com)",
+      "WebFetch(qwenlm.github.io)",
+      "Read(C:\\Users\\kirill\\.qwen/**)",
+      "Bash(curl *)",
+      "Bash(powershell *)",
+      "Bash(dir *)",
+      "Bash(python *)",
+      "Bash(cd *)"
+    ]
+  },
+  "$version": 3
+}

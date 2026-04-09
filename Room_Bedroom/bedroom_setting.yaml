@@ -8,17 +8,23 @@ bedroom_setting:
         friendly_name: "Кондиционер спальня"
         icon: mdi:zigbee
       switch.0xa4c13800371f889b:
-        friendly_name: "Розетка в спальной"
+        friendly_name: "Спальная комп"
         icon: mdi:power-socket-eu
       sensor.0xa4c13800371f889b_energy:
-        friendly_name: "Розетка в спальной энергия"
+        friendly_name: "Спальная комп энергия"
         icon: mdi:lightning-bolt-outline
+      sensor.0xa4c13800371f889b_power:
+        friendly_name: "Спальная комп мощность"
+        icon: mdi:lightning-bolt
       switch.0xa4c13883ea7103db:
         friendly_name: "Кондиционер в спальной"
         icon: mdi:power-socket-eu
       sensor.0xa4c13883ea7103db_energy:
         friendly_name: "Кондиционер в спальной энергия"
         icon: mdi:lightning-bolt-outline
+      sensor.0xa4c13883ea7103db_power:
+        friendly_name: "Кондиционер в спальной мощность"
+        icon: mdi:lightning-bolt
       climate.spalnya_ac:
         friendly_name: "Кондиционер - спальня"
       media_player.lg_webos_tv_un81006lb:
@@ -130,23 +136,15 @@ bedroom_setting:
           unit_of_measurement: "°C"
           device_class: temperature
           icon: mdi:temperature-celsius
-          state: >
-            {{ ((
-                (states('sensor.0x00158d000ad98aad_temperature') | float(0)) +
-                (states('sensor.spalnya_temperature') | float(0))
-                ) / 2) | round(2)
-              }}
+          state: >-
+            {{ (states('sensor.0x00158d000ad98aad_temperature') | float(0)) }}
 
         - name: spalnya_humidity_virt
           unit_of_measurement: "%"
           device_class: humidity
           icon: mdi:water-percent
           state: >-
-            {{ ((
-                (states('sensor.0x00158d000ad98aad_humidity') | float(0)) +
-                (states('sensor.spalnya_humidity') | float(0))
-                ) / 2) | round(2)
-              }}
+            {{ (states('sensor.0x00158d000ad98aad_humidity') | float(0)) | round(2) }}
 
     - switch:
         - turn_on:

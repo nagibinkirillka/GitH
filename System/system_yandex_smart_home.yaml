@@ -1,6 +1,8 @@
 system_yandex_smart_home:
   yandex_smart_home:
     filter:
+      exclude_entities:
+        - switch.led_kuhnja_switch_led_kuhnja
       include_entities:
         - switch.detskaya_l_switch
         - switch.detskaya_r_switch
@@ -18,6 +20,8 @@ system_yandex_smart_home:
         - cover.0xa4c138130a392f5a
         - light.led_koridor_ws2812_koridor
         - light.led_kuhnja_ws2812_kyhnya
+        - sensor.spalnya_temperature_virt
+        - switch.led_kuhnja_switch_led_kuhnja
     entity_config:
       switch.detskaya_r_switch:
         name: "Свет детская малый"
@@ -70,9 +74,9 @@ system_yandex_smart_home:
         name: "Счетчик холодной воды"
         room: Туалет
       cover.0xa4c138130a392f5a:
-        name: "Шторы спальня"
+        name: "Шторы"
         room: спальня
-        type: devices.types.openable
+        # type: devices.types.openable
         state_unknown: true
       light.led_kuhnja_ws2812_kyhnya:
         name: "Лента кухня"
@@ -82,3 +86,13 @@ system_yandex_smart_home:
         name: "Лента коридор"
         room: Прихожая
         type: devices.types.light.strip
+      sensor.spalnya_temperature_virt:
+        name: "спальной"
+        room: Спальня
+        properties:
+          - type: temperature
+            entity: sensor.spalnya_temperature_virt
+          - type: humidity
+            entity: sensor.spalnya_humidity_virt
+          - type: co2_level
+            entity: sensor.co2_co2

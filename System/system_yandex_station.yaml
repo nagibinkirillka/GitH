@@ -15,7 +15,7 @@ system_yandex_station:
         friendly_name: "Последняя активная яндекс станция"
 
   group:
-    yandex stations:
+    yandex_stations:
       name: "Яндекс станции"
       all: false
       entities:
@@ -24,7 +24,7 @@ system_yandex_station:
         - media_player.yandex_station_m007e85001yzgb
         - media_player.yandex_station_r10f2y0001a3gg
 
-    yandex stations2:
+    yandex_stations_without_children:
       name: "Яндекс станции без детской"
       all: false
       entities:
@@ -132,8 +132,8 @@ system_yandex_station:
 
         - name: yandex_station_r10f2y0001a3gg_assumed_state
           icon: mdi:cloud-alert
-          availability: "{{ not is_state('media_player.yandex_station_m007e85001yzgb', 'unavailable') }}"
-          state: "{{ is_state_attr('media_player.yandex_station_m007e85001yzgb', 'assumed_state', true) }}"
+          availability: "{{ not is_state('media_player.yandex_station_r10f2y0001a3gg', 'unavailable') }}"
+          state: "{{ is_state_attr('media_player.yandex_station_r10f2y0001a3gg', 'assumed_state', true) }}"
           delay_on:
             seconds: 5
           delay_off:
@@ -343,5 +343,5 @@ system_yandex_station:
           entity_id: media_player.yandex_station_r10f2y0001a3gg # замените на вашу колонку
           data:
             media_content_id: https://music.yandex.ru/users/nagibin.kirillka/playlists/3
-            media_content_type: xxx # тип не важен, но должен быть!
+            media_content_type: music # тип не важен, но должен быть!
 

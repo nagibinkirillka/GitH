@@ -1,0 +1,159 @@
+car_ya_int:
+  yandex_station_intents:
+    intents:
+      Заведи машину:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Заведи космолёт
+          - Заведи дельтоплан
+      Заглуши машину:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Заглуши космолёт
+          - Выключи машину
+          - Выключи дельтоплан
+      Статус машины:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Статус космолёта
+          - Что там по машине
+      Статус велосипеда:
+        extra_phrases: # альтернативные фразы, максимум три
+          - Что там по велосипеду
+
+  automation:
+    - alias: Ya_Int_car_power_On
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Заведи машину
+      action:
+        - choose:
+            - conditions:
+                - condition: state
+                  entity_id: switch.hyundai_solaris_engine
+                  state: "on"
+              sequence:
+                - service: media_player.play_media
+                  target:
+                    entity_id: "{{ states.input_text.yandex_station_last_activity.state }}"
+                  data:
+                    media_content_type: text
+                    media_content_id: "Машина уже заведена."
+                    extra:
+                      volume_level: 0.4
+          default:
+            - service: media_player.play_media
+              target:
+                entity_id: "{{ states.input_text.yandex_station_last_activity.state }}"
+              data:
+                media_content_type: text
+                media_content_id: "Пробуем завести эту колымагу. Ожидайте статуса..."
+                extra:
+                  volume_level: 0.4
+            - service: switch.turn_on
+              entity_id: switch.hyundai_solaris_engine
+            - wait_for_trigger:
+                - platform: state
+                  entity_id: switch.hyundai_solaris_engine
+                  to: "on"
+              timeout: "00:00:10" # Установить время ожидания (10 секунд)
+            - choose:
+                - conditions:
+                    - condition: state
+                      entity_id: switch.hyundai_solaris_engine
+                      state: "on"
+                  sequence:
+                    - service: media_player.play_media
+                      target:
+                        entity_id: "{{ states.input_text.yandex_station_last_activity.state }}"
+                      data:
+                        media_content_type: text
+                        media_content_id: "Машина завелась."
+                        extra:
+                          volume_level: 0.4
+              default:
+                - service: media_player.play_media
+                  target:
+                    entity_id: "{{ states.input_text.yandex_station_last_activity.state }}"
+                  data:
+                    media_content_type: text
+                    media_content_id: "Машина не завелась. Проверьте состояние."
+                    extra:
+                      volume_level: 0.4
+
+    - alias: Ya_Int_car_power_Off
+      trigger:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Заглуши машину
+      action:
+        - choose:
+            - conditions:
+                - condition: state
+                  entity_id: switch.hyundai_solaris_engine
+                  state: "on" # Если машина включена
+              sequence:
+                - service: switch.turn_off
+                  entity_id: switch.hyundai_solaris_engine
+                - service: media_player.play_media
+                  target:
+                    entity_id: "{{ states.input_text.yandex_station_last_activity.state }}"
+                  data:
+                    media_content_type: text
+                    media_content_id: "Машина заглушена."
+                    extra:
+                      volume_level: 0.4
+          default:
+            - service: media_player.play_media
+              target:
+                entity_id: "{{ states.input_text.yandex_station_last_activity.state }}"
+              data:
+                media_content_type: text
+                media_content_id: "Машина уже была выключена."
+                extra:
+                  volume_level: 0.4
+
+    - alias: Ya_Int_car_power_status_gpt
+      mode: single
+      triggers:
+        - platform: event
+          event_type: yandex_intent
+          event_data:
+            text: Статус машины
+      actions:
+        - action: conversation.process
+          data:
+            agent_id: conversation.cloud_ru_foundation_models
+            text: |
+              Машина сейчас {% if states('switch.signalizatsiia_starline_engine')  ==  'off' %} Машина выключена {% else %} Машина включена {% endif %}
+          response_variable: gpt_response
+        # - service: notify.telegram_me
+        #   data:
+        #       message: "{{ gpt_response.response.speech.plain.speech }}"
+        - service: media_player.play_media
+          target:
+            entity_id: "{{ states.input_text.yandex_station_last_activity.state }}"
+          data:
+            media_content_id: "{{ gpt_response.response.speech.plain.speech }}"
+            media_content_type: text:умный дом
+            extra:
+              volume_level: 0.4
+        # - service: telegram_bot.send_message
+        #   data:
+        #     target: !secret chat_id_group
+        #     message: "{{ gpt_response.response.speech.plain.speech }}"
+        #     disable_web_page_preview: true
+
+    # - alias: "Yandex Dialogs - test"
+    #   trigger:
+    #     platform: event
+    #     event_type: yandex_intent  # это событие ОТ вашего навыка
+    #     event_data:
+    #       text: Статус машины  # проверяем точное совпадение с фразой "привет"
+    #   action:
+    #   - service: media_player.play_media
+    #     target:
+    #       entity_id: media_player.yandex_station_r10f2y0001a3gg
+    #     data:
+    #       media_content_id: <speaker is_whisper="true">Хозяин, пора бы спать
+    #       media_content_type: text:умный дом

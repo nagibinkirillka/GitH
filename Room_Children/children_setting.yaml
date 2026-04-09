@@ -11,7 +11,9 @@ children_setting:
         friendly_name: "Playstation"
         device_class: tv
         icon: mdi:sony-playstation
-
+      switch.0xa4c138b8531d196c:
+        friendly_name: "Координатор детская"
+        icon: mdi:zigbee
       switch.0x60a423fffeb046fa_left:
         friendly_name: "Выключатель детская - большой свет"
         icon: mdi:lightbulb
@@ -39,11 +41,14 @@ children_setting:
         friendly_name: уборка в детской
         icon: mdi:robot-vacuum
       switch.0xa4c13865ff117cba:
-        friendly_name: "Розетка в детской"
+        friendly_name: "Детская зона телевизора"
         icon: mdi:power-socket-eu
       sensor.0xa4c13865ff117cba_energy:
-        friendly_name: "Розетка в детской энергия"
+        friendly_name: "Детская зона телевизора энергия"
         icon: mdi:lightning-bolt-outline
+      sensor.0xa4c13865ff117cba_power:
+        friendly_name: "Детская зона телевизора мощность"
+        icon: mdi:lightning-bolt
       sensor.0x00158d00067f0d82_battery:
         friendly_name: "Окно детская"
         device_class: battery
@@ -113,17 +118,23 @@ children_setting:
         friendly_name: "Кондиционер в детской энергия"
         icon: mdi:lightning-bolt-outline
       switch.0xa4c1380b215141b6:
-        friendly_name: "Розетка кондиционер детская"
+        friendly_name: "Холодильная камера"
         icon: mdi:power-socket-eu
       sensor.0xa4c1380b215141b6_energy:
-        friendly_name: "Розетка кондиционер детская энергия"
+        friendly_name: "Холодильная камера энергия"
         icon: mdi:lightning-bolt-outline
+      sensor.0xa4c1380b215141b6_power:
+        friendly_name: "Холодильная камера мощность"
+        icon: mdi:lightning-bolt
       switch.0xa4c138c8b951870d:
-        friendly_name: "Розетка детская шлюз"
+        friendly_name: "Холодильник"
         icon: mdi:power-socket-eu
       sensor.0xa4c138c8b951870d_energy:
-        friendly_name: "Розетка детская шлюз энергия"
+        friendly_name: "Холодильник энергия"
         icon: mdi:lightning-bolt-outline
+      sensor.0xa4c138c8b951870d_power:
+        friendly_name: "Холодильник мощность"
+        icon: mdi:lightning-bolt
       media_player.yandex_station_m007e85001yzgb:
         friendly_name: "Яндекс станция в детской"
 

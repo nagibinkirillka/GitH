@@ -38,6 +38,31 @@ balkon_setting:
       switch.lodjiya_sw_lodjiya_sw_relay:
         friendly_name: "Реле балкон"
         icon: mdi:relay
+      cover.0xa4c138130a392f5a:
+        friendly_name: "Шторы спальня"
+      scene.0xa4c138130a392f5a_1_1:
+        friendly_name: "Шторы спальня - Сцена 1"
+      scene.0xa4c138130a392f5a_2_5_open:
+        friendly_name: "Шторы спальня - Открыть"
+      scene.0xa4c138130a392f5a_3_333:
+        friendly_name: "Шторы спальня - 333"
+      scene.0xa4c138130a392f5a_4_scene_4:
+        friendly_name: "Шторы спальня - Сцена 4"
+      select.0xa4c138130a392f5a_motor_direction:
+        friendly_name: "Шторы спальня - Направление мотора"
+      select.0xa4c138130a392f5a_set_limits:
+        friendly_name: "Шторы спальня - Установка лимитов"
+      sensor.0xa4c138130a392f5a_battery:
+        friendly_name: "Шторы спальня - Батарея"
+        device_class: battery
+      sensor.0xa4c138130a392f5a_last_seen:
+        friendly_name: "Шторы спальня - Last seen"
+      sensor.0xa4c138130a392f5a_linkquality:
+        friendly_name: "Шторы спальня - Качество связи"
+      switch.0xa4c138130a392f5a_child_lock:
+        friendly_name: "Шторы спальня - Детский замок"
+      switch.0xa4c138130a392f5a_tilt_mode:
+        friendly_name: "Шторы спальня - Режим наклона"
 
   template:
     - binary_sensor:
@@ -98,14 +123,14 @@ balkon_setting:
           data:
             position: 25
 
-    balkon_cover_45:
-      alias: "Балкон - открыть на 45%"
+    balkon_cover_35:
+      alias: "Балкон - открыть на 35%"
       sequence:
         - service: cover.set_cover_position
           target:
             entity_id: cover.0xa4c138130a392f5a
           data:
-            position: 45
+            position: 35
 
     balkon_cover_50:
       alias: "Балкон - открыть на 50%"

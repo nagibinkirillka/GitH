@@ -1,0 +1,18 @@
+﻿{
+    "entity_id":  "sensor.0x00158d000ad604da_humidity",
+    "state":  "35.86",
+    "attributes":  {
+                       "state_class":  "measurement",
+                       "unit_of_measurement":  "%",
+                       "device_class":  "humidity",
+                       "friendly_name":  "Ð¡ÑÐµÐ´Ð½ÑÑ Ð²Ð»Ð°Ð¶Ð½Ð¾ÑÑÑ ÑÑÐ°Ð»ÐµÑ"
+                   },
+    "last_changed":  "2026-04-07T18:45:46.160064+00:00",
+    "last_reported":  "2026-04-07T18:45:46.160064+00:00",
+    "last_updated":  "2026-04-07T18:45:46.160064+00:00",
+    "context":  {
+                    "id":  "01KNMM7N1GJN9SNZMDZCRE71GB",
+                    "parent_id":  null,
+                    "user_id":  null
+                }
+}
