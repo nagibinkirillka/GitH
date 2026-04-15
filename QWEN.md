@@ -163,7 +163,46 @@ children_setting:
 
 ---
 
-**Последнее обновление**: 2026-04-07
+**Последнее обновление**: 2026-04-15
+
+## Активные задачи
+
+### Исправления ошибок Smart Log (завершено 2026-04-15)
+
+**Итог:** Было 661 запись → Стало **~31 запись**
+
+#### ✅ Выполнено
+1. **Yandex Smart Home: deprecated fan type** — уже исправлено (`devices.types.ventilation.fan`)
+2. **System_Notify_HA_Restart** — ограничен список устройств до 15. Файлы:
+   - `Z:\includes\System\system_ha_restart_notify.yaml`
+   - `Z:\System\system_ha_restart_notify.yaml`
+3. **Telegram Bot: Conflict** — исправлено (удалён дублирующий бот через UI)
+4. **Proxmox: KeyError 'used_fraction'** — исправлено (пользователь исправил хранилище SM в Proxmox)
+5. **ESPHome: tests @ 192.168.10.77** — удалена интеграция "tests" через UI. HA перезагружен.
+6. **system_reload_integration.yaml** — исправлен баг: `portfrw_virtdesc` → `portfrw_supcomp` в Telegram-сообщениях
+
+#### ⏸ Забито (пока не трогаем)
+7. **Template: switch_type_button** (18 ошибок) — Zigbee2MQTT 2.9.2, 7 MQTT-селекторов. Известный баг Z2M, шаблон ожидает поле которого нет в основном топике. Не критично (warning).
+8. **MQTT: Erroneous JSON** (10 ошибок) — устройство отправляет пустой JSON в `json_attributes_topic`. Источник не определён точно.
+9. **system_influxdb.yaml** — конфиг для InfluxDB v1, но используется v2 через GUI. Файл игнорируется.
+
+#### ℹ️ Минорные (периодически появляются)
+- **Iperf3: Connection reset** (3 ошибки) — `109.194.160.230:5202` недоступен
+- **Keenetic API: AttributeError** — `firmware.get("new")` возвращает None
+- **Yandex Station: пустое media_id** — `Получено пустое media_id`
+- **Reolink: lost event subscription** — камеры `192.168.10.86` и `192.168.10.147`
+- **Starline: 504 Gateway Time-out** — временная проблема API
+
+### ESPHome: co2.yaml
+- Добавлен `force_update: true` для CO2 сенсора — чтобы записывались все данные каждую минуту, а не только при изменении. Нужно перепрошить устройство.
+
+### InfluxDB
+- Версия 2, настроена через GUI (`homess` на `192.168.10.151:8086`).
+- `system_influxdb.yaml` игнорируется (настройка через UI). Если `sensor.co2_co2` не пишется — проверить фильтры в GUI интеграции.
+
+Подробности: `Z:\includes\SMART_LOG_FIXES.md`
+
+---
 
 ## Qwen Added Memories
 - Home Assistant: URL=http://192.168.10.150:8123, MCP URL=http://192.168.10.150:9583/private_VObDQKwk3OTWiqqxTn0tAg, Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIwNTM1NTBiYjdiOGE0ZjczODNlOTFlMDZlOTdhOGU3YyIsImlhdCI6MTc3NTU4NTc5NywiZXhwIjoyMDkwOTQ1Nzk3fQ.fPyNByqM5LEhGy7YZHfdqprUp8vaCkgJc8uB1sCfGPw

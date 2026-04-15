@@ -317,18 +317,18 @@ toilet_setting:
         - service: switch.turn_off
           entity_id: switch.tualet_vitajka_sonoff_basic_tualet
 
-    - alias: Toilet-Vityajka_On_humidity_vannaya_55
-      id: Vityajka_On_humidity_vannaya_55
-      initial_state: true
-      trigger:
-        platform: numeric_state
-        entity_id: sensor.vannaya_humidity_virt
-        above: 60
-      condition:
-      action:
-        - service: switch.turn_on
-          entity_id:
-            - switch.tualet_vitajka_sonoff_basic_tualet
+    # - alias: Toilet-Vityajka_On_humidity_vannaya_55
+    #   id: Vityajka_On_humidity_vannaya_55
+    #   initial_state: true
+    #   trigger:
+    #     platform: numeric_state
+    #     entity_id: sensor.vannaya_humidity_virt
+    #     above: 60
+    #   condition:
+    #   action:
+    #     - service: switch.turn_on
+    #       entity_id:
+    #         - switch.tualet_vitajka_sonoff_basic_tualet
 
     - alias: Toilet-Vityajka_Off_humidity_vannaya_45
       id: Vityajka_Off_humidity_vannaya_45

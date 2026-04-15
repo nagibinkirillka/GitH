@@ -62,11 +62,11 @@ system_yandex_smart_home:
       switch.tualet_vit:
         name: "Туалет вытяжка"
         room: Туалет
-        type: devices.types.other
+        type: devices.types.ventilation.fan
       switch.kuhnya_vitajka_kuhnya_vitajka_relay:
         name: "Вытяжка кухня"
         room: Кухня
-        type: devices.types.fan
+        type: devices.types.ventilation.fan
       sensor.waterius_8931698_ch0:
         name: "Счетчик горячей воды"
         room: Туалет

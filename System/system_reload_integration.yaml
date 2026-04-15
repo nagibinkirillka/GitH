@@ -1,0 +1,85 @@
+system_reload_integration:
+  homeassistant:
+    customize:
+
+  recorder:
+    purge_keep_days: 10
+    auto_purge: true
+    commit_interval: 30
+
+  automation:
+    - alias: system_switch.keenetic_giga_on_superserver
+      id: system_switch.keenetic_giga_on_superserver
+      triggers:
+        - trigger: time
+          at: "09:00:00"
+          weekday:
+            - mon
+            - tue
+            - wed
+            - thu
+            - fri
+      conditions:
+        - condition: state
+          entity_id: switch.keenetic_giga_7c432f_portfrw_supcomp
+          state: "off"
+      actions:
+        - action: switch.turn_on
+          metadata: {}
+          data: {}
+          target:
+            entity_id: switch.keenetic_giga_7c432f_portfrw_supcomp
+        - action: telegram_bot.send_message
+          data:
+            entity_id:
+              - notify.maylie_kirill_208710873
+            title: "{{ '\U0001F6AB' }} *Системное оповещение*"
+            message: >-
+              {{ '\U0001F550' }} Подключение по RDP:
+              {% if is_state('switch.keenetic_giga_7c432f_portfrw_supcomp', 'on') %}
+                ✅ Включено
+              {% else %}
+                ❌ Выключено
+              {% endif %}
+              {% set local_time = now().astimezone() %}
+              {{ '\U0001F4C5' }} Дата: {{ local_time.strftime("%d.%m.%Y") }}
+              {{ '\U000023F0' }} Время: {{ local_time.strftime("%H:%M") }}
+            disable_web_page_preview: true
+
+    - alias: system_switch.keenetic_giga_off_superserver
+      id: system_switch.keenetic_giga_off_superserver
+      triggers:
+        - trigger: time
+          at: "20:00:00"
+          weekday:
+            - mon
+            - tue
+            - wed
+            - thu
+            - fri
+      conditions:
+        - condition: state
+          entity_id: switch.keenetic_giga_7c432f_portfrw_supcomp
+          state: "on"
+      actions:
+        - action: switch.turn_off
+          metadata: {}
+          data: {}
+          target:
+            entity_id: switch.keenetic_giga_7c432f_portfrw_supcomp
+        - action: telegram_bot.send_message
+          data:
+            entity_id:
+              - notify.maylie_kirill_208710873
+            title: "{{ '\U0001F6AB' }} *Системное оповещение*"
+            message: >-
+              {{ '\U0001F550' }} Подключение по RDP:
+              {% if is_state('switch.keenetic_giga_7c432f_portfrw_supcomp', 'on') %}
+                ✅ Включено
+              {% else %}
+                ❌ Выключено
+              {% endif %}
+              {% set local_time = now().astimezone() %}
+              {{ '\U0001F4C5' }} Дата: {{ local_time.strftime("%d.%m.%Y") }}
+              {{ '\U000023F0' }} Время: {{ local_time.strftime("%H:%M") }}
+            disable_web_page_preview: true

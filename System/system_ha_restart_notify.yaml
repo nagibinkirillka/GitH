@@ -25,18 +25,24 @@ system_ha_restart_notify:
               {% endfor %}
               {{ ns.count }}
             unavailable_list: >
-              {% set ns = namespace(list='') %}
+              {% set ns = namespace(list='', count=0, max=15) %}
               {% for entity in states %}
-                {% if entity.state in ['unavailable', 'unknown'] %}
+                {% if entity.state in ['unavailable', 'unknown'] and ns.count < ns.max %}
                   {% set name = state_attr(entity.entity_id, 'friendly_name') %}
                   {% set ns.list = ns.list + '• ' + (name if name else entity.entity_id) + '\n' %}
+                  {% set ns.count = ns.count + 1 %}
                 {% endif %}
               {% endfor %}
-              {{ ns.list if ns.list else '✅ Все устройства доступны' }}
+              {% if ns.list %}
+                {{ ns.list }}{% if unavailable_count > ns.max %}... и ещё {{ unavailable_count - ns.max }} устройств
+                {% endif %}
+              {% else %}
+                ✅ Все устройства доступны
+              {% endif %}
         - action: telegram_bot.send_message
           data:
             entity_id:
-              - notify.maylie_opoveshchenie_ot_um_doma_1001785858034
+              - notify.maylie_kirill_208710873
             title: "{{ '\U0001F504' }} *Системное оповещение*"
             message: |
               ⏰ **Home Assistant перезагрузился**

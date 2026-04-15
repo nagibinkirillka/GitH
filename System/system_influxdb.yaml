@@ -1,11 +1,10 @@
 system_influxdb:
   influxdb:
-    default_measurement: state # <- будет использоваться как таблица
-    max_retries: 3
     tags:
       source: HomeAssistant
     tags_attributes:
       - friendly_name
+    default_measurement: units
     ignore_attributes:
       - icon
     include:
@@ -16,7 +15,7 @@ system_influxdb:
         - media_player
         - climate
       entity_globs:
-        - sensor.co2*
+        - sensor.co2_*
         - sensor.*_temperature
         - sensor.*_humidity
         - binary_sensor.*_door

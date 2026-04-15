@@ -106,6 +106,10 @@ koridor_setting:
         icon: mdi:temperature-celsius
       light.led_koridor_ws2812b:
         friendly_name: "Светодиодная лента в коридоре"
+      light.led_koridor_ws2812_koridor:
+        friendly_name: "Светодиодная лента в коридоре"
+      light.ws2812_koridor:
+        friendly_name: "Светодиодная лента в коридоре"
       switch.koridor_switch:
         friendly_name: "Выключатель коридор"
         icon: mdi:lightbulb
